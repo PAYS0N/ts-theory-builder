@@ -191,7 +191,7 @@ describe("dict.steno", () => {
 
     expect(entries.length).toBeGreaterThan(70);
     expect(byStroke.get("STKWR-PBGS/-FLT")?.count).toBe("AOEU");
-    expect(byStroke.get("STKWR-PBGS/RBGT")?.count).toBe("AOEU"); // constructor
+    expect(byStroke.get("STKWR-PBGS/-RBGT")?.count).toBe("AOEU"); // constructor
     expect(byStroke.get("STKWR-BGS")?.count).toBe("FPLT");
     expect(byStroke.get("STKWR-BGSD")?.count).toBe("FPLT"); // destructuring
     expect(byStroke.get("STKWR-FP")?.count).toBe("RBGS");

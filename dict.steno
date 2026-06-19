@@ -21,27 +21,27 @@
 pre-func
 ````
 ````STKWR-PBGS/-FLT
-function %0(%[, |%d%]): %t {%b%2}
+function %0(%[, |%(d+1)%]): %t {%b%(d+1)}
 ````
 @count AOEU
 ````STKWR-PBGS/-R
-(%[, |%d%]): %t => {%b%2}
+(%[, |%(d)%]): %t => {%b%(d)}
 ````
 @count AOEU
 ````STKWR-PBGS/-PL
-%0(%[, |%d%]): %t {%b%2}
+%0(%[, |%(d+1)%]): %t {%b%(d+1)}
 ````
 @count AOEU
 ````STKWR-PBGS/-PB
-async function %0(%[, |%d%]): Promise<%t> {%b%2}
+async function %0(%[, |%(d+1)%]): Promise<%t> {%b%(d+1)}
 ````
 @count AOEU
 ````STKWR-PBGS/-D
-function* %0(%[, |%d%]): Generator<%t> {%b%2}
+function* %0(%[, |%(d+1)%]): Generator<%t> {%b%(d+1)}
 ````
 @count AOEU
 ````STKWR-PBGS/-F
-(function %0(%[, |%d%]): %t {%b%2})();
+(function %0(%[, |%(d+1)%]): %t {%b%(d+1)})();
 ````
 @count AOEU
 ````STKWR*F
@@ -187,12 +187,12 @@ finally {%b%0}
 ````
 //below should duplicate inside the %[%]block d times; adding to the existing stroke's right side (R,B,G,S) => (1,2,4,8)
 ````STKWR-FP
-switch(%0) {%b%[case %(2d-1): \n%(2d)\nbreak;\n%]}
+switch(%0) {%b%[case %(2d+1): \n%(2d+2)\nbreak;\n%]}
 ````
 @count RBGS
 @multiline
 ````STKWR-FPD
-switch(%0) {%b%[case %(2d-1): \n%(2d)\nbreak;\n%]default:\n%(2d+1)}
+switch(%0) {%b%[case %(2d+1): \n%(2d+2)\nbreak;\n%]default:\n%(2d+1)}
 ````
 @count RBGS
 @multiline
@@ -317,8 +317,8 @@ class %0 implements %t {%b%2}
 this.
 ````
 // constructor / get / set = SECOND STROKES of the function root (reuse params/count)
-````STKWR-PBGS/RBGT
-constructor(%[, |%d%]) {%b%0}
+````STKWR-PBGS/-RBGT
+constructor(%[, |%(d)%]) {%b%(d)}
 ````
 @count AOEU
 ````STKWR-PBGS/-GT
@@ -341,11 +341,11 @@ const %0 = %1
 // Standalone destructuring patterns — count bank picks slot count; cursor -> slot 1.
 // Drop in after a no-type let/const, or into a param list.
 ````STKWR-BGSD
-[%[, |%d%]]
+[%[, |%(d)%]]
 ````
 @count FPLT
 ````STKWR-BGSZ
-{%[, |%d%]}
+{%[, |%(d)%]}
 ````
 @count FPLT
 

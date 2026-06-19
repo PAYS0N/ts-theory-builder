@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { parseSource, type Chunk } from "../src/parse.ts";
-import { expandCounts, ExpandError } from "../src/expand.ts";
+import { expandCounts, expandAll, ExpandError } from "../src/expand.ts";
 
 /** Render resolved chunks for assertions. Any count chunk left over is a bug. */
 function show(chunks: Chunk[]): string {
@@ -113,5 +115,33 @@ describe("count expansion — pass-through and misconfiguration", () => {
   it("a count operator without @count is an error", () => {
     expect(() => expandCounts(one("````X\n[%d]\n````"))).toThrow(/no @count/);
     expect(ExpandError).toBeTruthy();
+  });
+});
+
+describe("full dict.steno expansion", () => {
+  const text = readFileSync(fileURLToPath(new URL("../dict.steno", import.meta.url)), "utf8");
+  const entries = parseSource(text);
+
+  it("expands end-to-end with no errors", () => {
+    expect(() => expandAll(entries)).not.toThrow();
+  });
+
+  it("count expansion grows the entry set", () => {
+    expect(expandAll(entries).length).toBeGreaterThan(entries.length);
+  });
+
+  it("named function -FLT count 2 -> landings %1,%2 and body %3", () => {
+    const all = expandAll(entries);
+    const e = all.find((x) => x.stroke === "STKWR-PBGS/OFLT"); // -FLT + O (=2)
+    expect(e).toBeDefined();
+    expect(show(e!.template)).toBe("function %0(%1, %2): %t {%b%3}");
+  });
+
+  it("no expanded entry leaves a count operator unresolved", () => {
+    for (const e of expandAll(entries)) {
+      expect(e.template.some((c) => c.k === "repeat" || c.k === "dcount" || c.k === "computed")).toBe(
+        false,
+      );
+    }
   });
 });
