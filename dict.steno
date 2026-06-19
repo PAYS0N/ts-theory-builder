@@ -20,30 +20,31 @@
 ````STKWR-PBGS
 pre-func
 ````
+# Functions carry NO params: that ×8 count expansion dwarfs everything else.
+# Params are added afterward with the STKWR-PB param stroke (bare commas + slots).
 ````STKWR-PBGS/-FLT
-function %0(%[, |%(d+1)%]): %t {%b%(d+1)}
+function %0(): %t {%b%1}
 ````
-@count AOEU
 ````STKWR-PBGS/-R
-(%[, |%(d)%]): %t => {%b%(d)}
+(): %t => {%b%0}
 ````
-@count AOEU
 ````STKWR-PBGS/-PL
-%0(%[, |%(d+1)%]): %t {%b%(d+1)}
+%0(): %t {%b%1}
 ````
-@count AOEU
 ````STKWR-PBGS/-PB
-async function %0(%[, |%(d+1)%]): Promise<%t> {%b%(d+1)}
+async function %0(): Promise<%t> {%b%1}
 ````
-@count AOEU
 ````STKWR-PBGS/-D
-function* %0(%[, |%(d+1)%]): Generator<%t> {%b%(d+1)}
+function* %0(): Generator<%t> {%b%1}
 ````
-@count AOEU
 ````STKWR-PBGS/-F
-(function %0(%[, |%(d+1)%]): %t {%b%(d+1)})();
+(function %0(): %t {%b%1})();
 ````
-@count AOEU
+# params: drop bare comma-separated cursor slots inside an existing () — no parens.
+````STKWR-PB
+%[, |%(d)%]
+````
+@count AOE
 ````STKWR*F
 else if(%0) {%b%1}
 ````
@@ -177,24 +178,24 @@ try {%b%0} finally {%b%1}
 ````STKWR-FL
 finally {%b%0}
 ````
-# index: bare STKWR-BGS -> [0]; the FPLT bank encodes 0-15 -> [n]. Nothing maps to [].
+# index: bare STKWR-BGS -> [0]; the AOE vowel bank encodes 0-7 -> [n]. Nothing maps to [].
 ````STKWR-BGS
 [%d]
 ````
-@count FPLT
+@count AOE
 ````STKWR*BGS
 .at()
 ````
-//below should duplicate inside the %[%]block d times; adding to the existing stroke's right side (R,B,G,S) => (1,2,4,8)
+# switch: case count via the AOE vowel bank (A=1,O=2,E=4); the %[%] block repeats d times. U reserved for the line-expansion flag.
 ````STKWR-FP
 switch(%0) {%b%[case %(2d+1): \n%(2d+2)\nbreak;\n%]}
 ````
-@count RBGS
+@count AOE
 @multiline
 ````STKWR-FPD
 switch(%0) {%b%[case %(2d+1): \n%(2d+2)\nbreak;\n%]default:\n%(2d+1)}
 ````
-@count RBGS
+@count AOE
 @multiline
 ````STKWR-FPBGS
 case %0:
@@ -229,75 +230,99 @@ while(%0) {%b}
 do {%b%1} while (%0)
 ````
 
-// Types for secondary strokes - NOT VALID ON THEIR OWN
+// Types for secondary strokes - NOT VALID ON THEIR OWN (marked @type).
 // For now, unless there is an obvious solution, ignore the nested cursor placeholders
 // Add * for array of the type with Array<> notation
-// ARITY: unmarked = 0 (terminal on append). Generics carry // arity N and stay
-// NON-TERMINAL until N type-args are appended (all behave like Map).
+// @type marks an appendable type. @arity N (default 0) = generic arg count;
+// arity>0 stays NON-TERMINAL until N type-args are appended (all behave like Map).
 ````TPH
 number
 ````
+@type
 ````STR
 string
 ````
+@type
 ````PW
 boolean
 ````
+@type
 ````TPHR
 null
 ````
+@type
+@noarg
 ````TK
 undefined
 ````
+@type
+@noarg
 ````STPHR
 never
 ````
+@type
+@noarg
 ````TKPW
 bigint
 ````
+@type
 ````SPH
 symbol
 ````
+@type
 ````SR
 void
 ````
+@type
 ````STKPWHR
 any
 ````
+@type
 ````TPWH
 unknown
 ````
+@type
 ````SKP
 
 ````
+@type
 ````SKPWR
 object
 ````
+@type
 ````PR
 Promise<%t>
 ````
+@type
 @arity 1
 ````PH
 Map<%t, %t>
 ````
+@type
 @arity 2
 ````KR
 Record<%t, %t>
 ````
+@type
 @arity 2
 ````ST
 Set<%t>
 ````
+@type
 @arity 1
 ````R
 Error
 ````
+@type
 ````TP
 function
 ````
+@type
+@noarg
 ````SKWR
 Generator<%t>
 ````
+@type
 @arity 1
 
 // =====================================================================
@@ -318,9 +343,8 @@ this.
 ````
 // constructor / get / set = SECOND STROKES of the function root (reuse params/count)
 ````STKWR-PBGS/-RBGT
-constructor(%[, |%(d)%]) {%b%(d)}
+constructor() {%b%0}
 ````
-@count AOEU
 ````STKWR-PBGS/-GT
 get %0(): %t {%b%1}
 ````
@@ -343,11 +367,11 @@ const %0 = %1
 ````STKWR-BGSD
 [%[, |%(d)%]]
 ````
-@count FPLT
+@count AOE
 ````STKWR-BGSZ
 {%[, |%(d)%]}
 ````
-@count FPLT
+@count AOE
 
 // =====================================================================
 // DATA STRUCTURES (§4k): static root + selector; whole-structure emission.
@@ -371,8 +395,6 @@ class LinkedList<T> {
 	tail: ListNode<T> | null = null;
 	size = 0;
 
-	// removeLast is inherently O(n) for a singly-linked list (no prev pointer),
-	// so the all-O(1) interface is addFirst / addLast / removeFirst.
 	addFirst(value: T): void {
 		const node = new ListNode(value);
 		node.next = this.head;

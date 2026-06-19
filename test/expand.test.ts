@@ -130,11 +130,11 @@ describe("full dict.steno expansion", () => {
     expect(expandAll(entries).length).toBeGreaterThan(entries.length);
   });
 
-  it("named function -FLT count 2 -> landings %1,%2 and body %3", () => {
+  it("the param stroke count 2 -> two comma-joined cursor slots, no parens", () => {
     const all = expandAll(entries);
-    const e = all.find((x) => x.stroke === "STKWR-PBGS/OFLT"); // -FLT + O (=2)
+    const e = all.find((x) => x.stroke === "STKWROPB"); // STKWR-PB + O (=2)
     expect(e).toBeDefined();
-    expect(show(e!.template)).toBe("function %0(%1, %2): %t {%b%3}");
+    expect(show(e!.template)).toBe("%0, %1");
   });
 
   it("no expanded entry leaves a count operator unresolved", () => {

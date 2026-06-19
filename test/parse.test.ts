@@ -122,7 +122,7 @@ describe("parseSource", () => {
     "````STKWR-PBGS/-FLT",
     "function %0(%[, |%d%]): %t {%b%2}",
     "````",
-    "@count AOEU",
+    "@count AOE",
     "",
     "````PH",
     "Map<%t, %t>",
@@ -141,7 +141,7 @@ describe("parseSource", () => {
 
     const fn = entries[0];
     expect(fn.stroke).toEqual(["STKWR-PBGS", "-FLT"]);
-    expect(fn.count).toBe("AOEU");
+    expect(fn.count).toBe("AOE");
     expect(fn.arity).toBeUndefined();
 
     expect(entries[1].arity).toBe(2);
@@ -190,11 +190,12 @@ describe("dict.steno", () => {
     const byStroke = new Map(entries.map((e) => [e.strokeRaw, e]));
 
     expect(entries.length).toBeGreaterThan(70);
-    expect(byStroke.get("STKWR-PBGS/-FLT")?.count).toBe("AOEU");
-    expect(byStroke.get("STKWR-PBGS/-RBGT")?.count).toBe("AOEU"); // constructor
-    expect(byStroke.get("STKWR-BGS")?.count).toBe("FPLT");
-    expect(byStroke.get("STKWR-BGSD")?.count).toBe("FPLT"); // destructuring
-    expect(byStroke.get("STKWR-FP")?.count).toBe("RBGS");
+    expect(byStroke.get("STKWR-PB")?.count).toBe("AOE"); // param stroke
+    expect(byStroke.get("STKWR-PBGS/-FLT")?.count).toBeUndefined(); // functions are no-param now
+    expect(byStroke.get("STKWR-BGS")?.count).toBe("AOE");
+    expect(byStroke.get("STKWR-BGSD")?.count).toBe("AOE"); // destructuring
+    expect(byStroke.get("STKWR-FP")?.count).toBe("AOE");
+    expect(byStroke.get("STPHR")?.noArg).toBe(true); // never is not a generic arg
     expect(byStroke.get("STKWR-FP")?.multiline).toBe(true);
     expect(byStroke.get("PR")?.arity).toBe(1);
     expect(byStroke.get("PH")?.arity).toBe(2);

@@ -124,6 +124,16 @@ export function countBank(spec: string): CountBank {
   return { bits, max: (1 << keys.length) - 1 };
 }
 
+/** Add a single key (vowel or right-bank) to a sub-stroke segment. */
+export function addKey(segment: string, key: string): string {
+  const keys = parseStroke(segment);
+  const side = MID_SET.has(key) ? "mid" : RIGHT_SET.has(key) ? "right" : null;
+  if (side === null) throw new StrokeError(`cannot add key "${key}" (not a vowel/right-bank key)`);
+  if (keys[side].has(key)) throw new StrokeError(`key "${key}" already in "${segment}"`);
+  keys[side].add(key);
+  return renderStroke(keys);
+}
+
 /** Merge the keys encoding `count` (per `spec`) into one sub-stroke segment. */
 export function applyCount(segment: string, spec: string, count: number): string {
   const bank = countBank(spec);

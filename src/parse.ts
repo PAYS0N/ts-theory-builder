@@ -43,6 +43,10 @@ export interface Entry {
   arity?: number;
   /** @multiline — construct never collapses to one line (ignores the O flag). */
   multiline?: boolean;
+  /** @type — this entry is an appendable type, not a standalone construct. */
+  isType?: boolean;
+  /** @noarg — a type that may be a return type but never a generic argument. */
+  noArg?: boolean;
   /** 1-based line of the opening fence. */
   line: number;
 }
@@ -295,6 +299,12 @@ function applyDirective(e: Entry, line: string, lineNo: number): void {
     }
     case "multiline":
       e.multiline = true;
+      return;
+    case "type":
+      e.isType = true;
+      return;
+    case "noarg":
+      e.noArg = true;
       return;
     default:
       throw new StenoError(`unknown directive @${name}`, lineNo);
