@@ -464,7 +464,7 @@ class Queue<T> {
 	}
 }
 ````
-````STKWR-RBGT/TKX
+````STKWR-RBGT/TKW
 class Deque<T> {
 	private items = new Map<number, T>();
 	private head = 0; // index of current front

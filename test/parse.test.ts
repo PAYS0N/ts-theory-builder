@@ -189,17 +189,36 @@ describe("dict.steno", () => {
     const entries = parseSource(text);
     const byStroke = new Map(entries.map((e) => [e.strokeRaw, e]));
 
-    expect(entries.length).toBeGreaterThan(15);
+    expect(entries.length).toBeGreaterThan(70);
     expect(byStroke.get("STKWR-PBGS/-FLT")?.count).toBe("AOEU");
+    expect(byStroke.get("STKWR-PBGS/RBGT")?.count).toBe("AOEU"); // constructor
     expect(byStroke.get("STKWR-BGS")?.count).toBe("FPLT");
+    expect(byStroke.get("STKWR-BGSD")?.count).toBe("FPLT"); // destructuring
+    expect(byStroke.get("STKWR-FP")?.count).toBe("RBGS");
     expect(byStroke.get("STKWR-FP")?.multiline).toBe(true);
     expect(byStroke.get("PR")?.arity).toBe(1);
     expect(byStroke.get("PH")?.arity).toBe(2);
+    expect(byStroke.get("SKWR")?.arity).toBe(1); // Generator
 
     // the data-structure block round-trips and contains a brace chunk
     const stack = byStroke.get("STKWR-RBGT/S")!;
     expect(stack.raw).toContain("class Stack<T> {");
     expect(stack.template.some((c) => c.k === "brace")).toBe(true);
+
+    // all 11 data-structure selectors survived the migration
+    const structs = entries.filter((e) => e.strokeRaw.startsWith("STKWR-RBGT/"));
+    expect(structs.length).toBe(11);
+  });
+
+  it("has no duplicate strokes (the collision invariant)", () => {
+    const entries = parseSource(text);
+    const seen = new Set<string>();
+    const dups: string[] = [];
+    for (const e of entries) {
+      if (seen.has(e.strokeRaw)) dups.push(e.strokeRaw);
+      seen.add(e.strokeRaw);
+    }
+    expect(dups).toEqual([]);
   });
 
   it("no entry uses an unknown operator (every % is consumed)", () => {
