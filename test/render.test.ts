@@ -11,26 +11,26 @@ const byStroke = new Map(typed.map((e) => [e.stroke, e]));
 
 describe("renderPlain", () => {
   it("terminal: emits braces, escapes, and movement back to %0", () => {
-    const e = byStroke.get("STKWR-PBGS/-FLT/TPH")!; // function %0(): number {%b%1}
+    const e = byStroke.get("STKWR-PBGS/TPH-FLT")!; // fused: number-returning function
     const { key, value } = renderPlain(e);
-    expect(key).toBe("STKWR-PBGS/-FLT/TPH");
+    expect(key).toBe("STKWR-PBGS/TPH-FLT");
     expect(value).toBe(
-      "{^}function (): number \\{\\n\\}{#Up End Left Left Left Left Left Left Left Left Left Left Left Left}",
+      "{^}function (): number \\{\\n\\}{#Up End Left Left Left Left Left Left Left Left Left Left Left Left}{^}",
     );
   });
 
   it("non-terminal: drops all bracing and emits no movement", () => {
-    const e = byStroke.get("STKWR-PBGS/-FLT/PH")!; // Map head — non-terminal
+    const e = byStroke.get("STKWR-PBGS/PH-FLT")!; // Map head — non-terminal
     expect(e.terminal).toBe(false);
     const { value } = renderPlain(e);
     expect(value).not.toContain("{#"); // no movement
-    expect(value.slice(3)).not.toMatch(/[(){}[\]<>]/); // bracing stripped (past the {^})
+    expect(value).not.toMatch(/[()[\]<>]/); // auto-paired delimiters stripped ({} ok: {^} / {^ ^})
   });
 
   it("a single-line terminal lands with no {#Up} (same line)", () => {
     const e = byStroke.get("STKWR-BGS")!; // [%d] count 0 -> [0], no %0 -> no movement
     const { value } = renderPlain(e);
-    expect(value).toBe("{^}[0]");
+    expect(value).toBe("{^}[0]{^}");
   });
 });
 

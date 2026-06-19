@@ -91,12 +91,29 @@ function movement(text: string, cursor: number): string {
 
 function escapeText(s: string): string {
   let out = "";
-  for (const ch of s) {
+  let i = 0;
+  while (i < s.length) {
+    const ch = s[i]!;
+    if (ch === " ") {
+      // Plover collapses adjacent spaces and eats line-edge/trailing ones, so a
+      // space run that is length>=2 or touches a boundary/newline must be made
+      // explicit with {^ ^}. A lone internal space is safe.
+      let j = i;
+      while (j < s.length && s[j] === " ") j++;
+      const len = j - i;
+      const before = i > 0 ? s[i - 1] : undefined;
+      const after = j < s.length ? s[j] : undefined;
+      const safe = len === 1 && before !== undefined && before !== "\n" && after !== "\n";
+      out += safe ? " " : "{^ ^}".repeat(len);
+      i = j;
+      continue;
+    }
     if (ch === "{") out += "\\{";
     else if (ch === "}") out += "\\}";
     else if (ch === "\n") out += "\\n";
     else if (ch === "\t") out += "\\t";
     else out += ch;
+    i++;
   }
   return out;
 }
@@ -106,6 +123,7 @@ export function renderPlain(entry: TypedEntry): { key: string; value: string } {
   const { text, cursor } = renderTemplate(entry.template, entry.terminal, entry.oneLiner ?? false);
   let value = "{^}" + escapeText(text);
   if (entry.terminal && cursor != null) value += movement(text, cursor);
+  value += "{^}"; // every translation ends attached: no trailing space
   return { key: entry.stroke, value };
 }
 

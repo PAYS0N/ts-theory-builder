@@ -10,7 +10,7 @@
 // Iteration index is 0-based (ITERATION_BASE) — a one-line knob.
 
 import type { Chunk, Entry } from "./parse.ts";
-import { addKey, applyCount, countBank } from "./steno.ts";
+import { addKey, applyCount, countBank, mergeStrokes } from "./steno.ts";
 
 export class ExpandError extends Error {
   constructor(message: string) {
@@ -181,31 +181,73 @@ function* fillings(opts: TypeOptions): Generator<Filling> {
   }
 }
 
-function withType(template: Chunk[], slot: number, text: string): Chunk[] {
+function withTypes(template: Chunk[], slots: number[], texts: string[]): Chunk[] {
   const out = template.slice();
-  out[slot] = { k: "lit", text };
+  slots.forEach((idx, i) => {
+    out[idx] = { k: "lit", text: texts[i]! };
+  });
   return out;
 }
 
-/** Build the type-append chain for one count-expanded entry. */
+/**
+ * Multi-slot fill (typed params): every %t slot gets an arity-0 type from the
+ * pool, appended one per slot. All slots must be filled to terminate.
+ */
+function expandMultiSlot(entry: ExpandedEntry, slots: number[], pool: TypeDef[]): TypedEntry[] {
+  const m = slots.length;
+  const out: TypedEntry[] = [
+    { ...entry, template: withTypes(entry.template, slots, slots.map(() => "")), terminal: false },
+  ];
+  const rec = (chosen: TypeDef[]): void => {
+    if (chosen.length > 0) {
+      const texts = slots.map((_, i) => (chosen[i] ? renderType(chosen[i]!, []) : ""));
+      out.push({
+        ...entry,
+        stroke: `${entry.stroke}/${chosen.map((t) => t.stroke).join("/")}`,
+        template: withTypes(entry.template, slots, texts),
+        terminal: chosen.length === m,
+      });
+    }
+    if (chosen.length < m) for (const t of pool) rec([...chosen, t]);
+  };
+  rec([]);
+  return out;
+}
+
+/** Build the type-append chain(s) for one count-expanded entry. */
 export function expandTypesOne(entry: ExpandedEntry, opts: TypeOptions): TypedEntry[] {
-  const slot = entry.template.findIndex((c) => c.k === "typeslot");
-  if (slot === -1) {
-    return [{ ...entry, terminal: true }];
-  }
-  if (entry.template.slice(slot + 1).some((c) => c.k === "typeslot")) {
-    throw new ExpandError(`"${entry.stroke}" has more than one %t (unsupported)`);
+  const slots = entry.template.flatMap((c, i) => (c.k === "typeslot" ? [i] : []));
+  if (slots.length === 0) return [{ ...entry, terminal: true }];
+  if (slots.length > 1) return expandMultiSlot(entry, slots, opts.genericArgs);
+
+  const slot = slots[0]!;
+  const out: TypedEntry[] = [];
+
+  if (entry.source.fuse) {
+    // Fuse the construct's last segment (the shape selector) into the first
+    // appended type stroke, and drop the type-less base entirely.
+    const segs = entry.stroke.split("/");
+    const shape = segs[segs.length - 1]!;
+    const root = segs.slice(0, -1);
+    for (const f of fillings(opts)) {
+      const first = mergeStrokes(f.suffix[0]!, shape);
+      out.push({
+        ...entry,
+        stroke: [...root, first, ...f.suffix.slice(1)].join("/"),
+        template: withTypes(entry.template, [slot], [f.text]),
+        terminal: f.terminal,
+      });
+    }
+    return out;
   }
 
-  const out: TypedEntry[] = [
-    // base: the skeleton before any type is appended (non-terminal)
-    { ...entry, template: withType(entry.template, slot, ""), terminal: false },
-  ];
+  // base: the skeleton before any type is appended (non-terminal)
+  out.push({ ...entry, template: withTypes(entry.template, [slot], [""]), terminal: false });
   for (const f of fillings(opts)) {
     out.push({
       ...entry,
       stroke: `${entry.stroke}/${f.suffix.join("/")}`,
-      template: withType(entry.template, slot, f.text),
+      template: withTypes(entry.template, [slot], [f.text]),
       terminal: f.terminal,
     });
   }

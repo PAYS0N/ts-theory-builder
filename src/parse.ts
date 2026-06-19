@@ -47,6 +47,9 @@ export interface Entry {
   isType?: boolean;
   /** @noarg — a type that may be a return type but never a generic argument. */
   noArg?: boolean;
+  /** @fuse — fuse the last stroke segment into the first appended type stroke
+   * (so the type-less intermediate is never a required stroke). */
+  fuse?: boolean;
   /** 1-based line of the opening fence. */
   line: number;
 }
@@ -305,6 +308,9 @@ function applyDirective(e: Entry, line: string, lineNo: number): void {
       return;
     case "noarg":
       e.noArg = true;
+      return;
+    case "fuse":
+      e.fuse = true;
       return;
     default:
       throw new StenoError(`unknown directive @${name}`, lineNo);

@@ -124,6 +124,20 @@ export function countBank(spec: string): CountBank {
   return { bits, max: (1 << keys.length) - 1 };
 }
 
+/** Union the keys of two sub-strokes into one (errors on a shared key). */
+export function mergeStrokes(a: string, b: string): string {
+  const ka = parseStroke(a);
+  const kb = parseStroke(b);
+  for (const side of ["left", "mid", "right"] as const) {
+    for (const k of kb[side]) {
+      if (ka[side].has(k)) throw new StrokeError(`merge conflict on "${k}" in "${a}" + "${b}"`);
+      ka[side].add(k);
+    }
+  }
+  ka.num = ka.num || kb.num;
+  return renderStroke(ka);
+}
+
 /** Add a single key (vowel or right-bank) to a sub-stroke segment. */
 export function addKey(segment: string, key: string): string {
   const keys = parseStroke(segment);

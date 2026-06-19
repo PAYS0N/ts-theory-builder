@@ -144,9 +144,9 @@ describe("full dict.steno — Pass A + B (all arity-0 as generic args)", () => {
 
   it("a deep terminal type entry is present and correct", () => {
     const all = expandDict(entries);
-    const e = all.find((x) => x.stroke === "STKWR-PBGS/-FLT/PH/STR/TPH");
+    const e = all.find((x) => x.stroke === "STKWR-PBGS/PH-FLT/STR/TPH"); // shape fused into Map
     expect(e).toBeDefined();
     expect(e!.terminal).toBe(true);
-    expect(show(e!.template)).toBe("function %0(): Map<string, number> {%b%1}");
+    expect(show(e!.template)).toBe("function %0(%1): Map<string, number> {%b%2}");
   });
 });

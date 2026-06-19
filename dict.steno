@@ -20,31 +20,43 @@
 ````STKWR-PBGS
 pre-func
 ````
-# Functions carry NO params: that ×8 count expansion dwarfs everything else.
-# Params are added afterward with the STKWR-PB param stroke (bare commas + slots).
+# Functions carry one inline param; more come from STKWR-PB. @fuse merges the
+# return type into the shape stroke, so `func / TPH-FLT` -> a number function
+# directly (no required type-less intermediate stroke).
 ````STKWR-PBGS/-FLT
-function %0(): %t {%b%1}
+function %0(%1): %t {%b%2}
 ````
+@fuse
 ````STKWR-PBGS/-R
-(): %t => {%b%0}
+(%0): %t => {%b%1}
 ````
+@fuse
 ````STKWR-PBGS/-PL
-%0(): %t {%b%1}
+%0(%1): %t {%b%2}
 ````
+@fuse
 ````STKWR-PBGS/-PB
-async function %0(): Promise<%t> {%b%1}
+async function %0(%1): Promise<%t> {%b%2}
 ````
+@fuse
 ````STKWR-PBGS/-D
-function* %0(): Generator<%t> {%b%1}
+function* %0(%1): Generator<%t> {%b%2}
 ````
+@fuse
 ````STKWR-PBGS/-F
-(function %0(): %t {%b%1})();
+(function %0(%1): %t {%b%2})(%3);
 ````
+@fuse
 # params: drop bare comma-separated cursor slots inside an existing () — no parens.
 ````STKWR-PB
 %[, |%(d)%]
 ````
 @count AOE
+# typed params (<=3 via the AO bank): each slot is `name: type`, type appended per slot.
+````STKWR-PT
+%[, |%(d): %t%]
+````
+@count AO
 ````STKWR*F
 else if(%0) {%b%1}
 ````
@@ -118,7 +130,7 @@ pre-method
 ````STKWR*PLT/RAOUSZ
 .reduce((acc, curr) => %0, %1)
 ````
-````STKWR*PLT/RAOUSZD
+````STKWR*PLT/RAOUSDZ
 .reduce((acc, curr) => {\nreturn %0}, %1)
 ````
 ````STKWR*PLT/TP-R
@@ -310,6 +322,12 @@ Set<%t>
 ````
 @type
 @arity 1
+# Array as a generic (Array<T>), not a '*' suffix — the suffix would double the dict.
+````KWR
+Array<%t>
+````
+@type
+@arity 1
 ````R
 Error
 ````
@@ -343,7 +361,7 @@ this.
 ````
 // constructor / get / set = SECOND STROKES of the function root (reuse params/count)
 ````STKWR-PBGS/-RBGT
-constructor() {%b%0}
+constructor(%0) {%b%1}
 ````
 ````STKWR-PBGS/-GT
 get %0(): %t {%b%1}
