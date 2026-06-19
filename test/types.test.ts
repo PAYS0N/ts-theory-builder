@@ -149,4 +149,11 @@ describe("full dict.steno — Pass A + B (all arity-0 as generic args)", () => {
     expect(e!.terminal).toBe(true);
     expect(show(e!.template)).toBe("function %0(%1): Map<string, number> {%b%2}");
   });
+
+  it("free-type (SKP) keeps the colon, tabstops the type, leaves %0 on the name", () => {
+    const e = expandDict(entries).find((x) => x.stroke === "STKWR-PBGS/SKP-FLT");
+    expect(e).toBeDefined();
+    expect(e!.terminal).toBe(true);
+    expect(show(e!.template)).toBe("function %0(%1): %3 {%b%2}"); // type slot is %3, name still %0
+  });
 });

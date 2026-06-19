@@ -343,6 +343,13 @@ Generator<%t>
 @type
 @arity 1
 
+// A standalone type emitter: stroke STKWR-T, then append any type to write it
+// anywhere (assertions, casts, free-standing annotations). Base emits nothing;
+// STKWR-T/TPH -> number, STKWR-T/PR/STR -> Promise<string>, STKWR-T/SKP -> free.
+````STKWR-T
+%t
+````
+
 // =====================================================================
 // CLASSES (§4i)
 // =====================================================================

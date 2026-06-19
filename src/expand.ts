@@ -112,6 +112,8 @@ export interface TypeDef {
   arity: number;
   /** Rendered text with %t arg markers, e.g. "string" or "Map<%t, %t>". */
   text: string;
+  /** Empty type (SKP): a free/custom type — leaves `: ` and a tabstop to type by hand. */
+  freeType?: boolean;
 }
 
 export interface TypedEntry {
@@ -150,6 +152,7 @@ interface Filling {
   suffix: string[];
   text: string;
   terminal: boolean;
+  freeType?: boolean;
 }
 
 function* fillArgs(
@@ -172,7 +175,9 @@ function* fillArgs(
 
 function* fillings(opts: TypeOptions): Generator<Filling> {
   for (const t of opts.types) {
-    if (t.arity === 0) {
+    if (t.freeType) {
+      yield { suffix: [t.stroke], text: "", terminal: true, freeType: true };
+    } else if (t.arity === 0) {
       yield { suffix: [t.stroke], text: renderType(t, []), terminal: true };
     } else {
       yield { suffix: [t.stroke], text: partialType(t, []), terminal: false };
@@ -187,6 +192,23 @@ function withTypes(template: Chunk[], slots: number[], texts: string[]): Chunk[]
     out[idx] = { k: "lit", text: texts[i]! };
   });
   return out;
+}
+
+/**
+ * Free-type fill: replace the type slot with a numbered tabstop above all existing
+ * landings, so the plain profile still lands on %0 (the name) but the snippet
+ * profile gets a stop at the type. The `: ` stays.
+ */
+function withFreeType(template: Chunk[], slot: number): Chunk[] {
+  let max = -1;
+  for (const c of template) if (c.k === "landing") max = Math.max(max, c.n);
+  const out = template.slice();
+  out[slot] = { k: "landing", n: max + 1 };
+  return out;
+}
+
+function fillTemplate(template: Chunk[], slot: number, f: Filling): Chunk[] {
+  return f.freeType ? withFreeType(template, slot) : withTypes(template, [slot], [f.text]);
 }
 
 /**
@@ -234,7 +256,7 @@ export function expandTypesOne(entry: ExpandedEntry, opts: TypeOptions): TypedEn
       out.push({
         ...entry,
         stroke: [...root, first, ...f.suffix.slice(1)].join("/"),
-        template: withTypes(entry.template, [slot], [f.text]),
+        template: fillTemplate(entry.template, slot, f),
         terminal: f.terminal,
       });
     }
@@ -247,7 +269,7 @@ export function expandTypesOne(entry: ExpandedEntry, opts: TypeOptions): TypedEn
     out.push({
       ...entry,
       stroke: `${entry.stroke}/${f.suffix.join("/")}`,
-      template: withTypes(entry.template, [slot], [f.text]),
+      template: fillTemplate(entry.template, slot, f),
       terminal: f.terminal,
     });
   }
@@ -275,12 +297,13 @@ export function buildTypeSet(entries: Entry[]): { types: TypeDef[]; arity0: Type
   for (const e of entries) {
     if (!e.isType) continue;
     const text = renderTypeText(e.template);
-    if (text === "") continue; // SKP (empty/skip type) — colon handling still TBD
-    types.push({ stroke: e.strokeRaw, arity: e.arity ?? 0, text });
+    const def: TypeDef = { stroke: e.strokeRaw, arity: e.arity ?? 0, text };
+    if (text === "") def.freeType = true;
+    types.push(def);
     if (e.noArg) noArg.add(e.strokeRaw);
   }
-  // Generic-arg pool = arity-0 types that are realistic as type arguments.
-  const arity0 = types.filter((t) => t.arity === 0 && !noArg.has(t.stroke));
+  // Generic-arg pool = arity-0 concrete types that are realistic as type arguments.
+  const arity0 = types.filter((t) => t.arity === 0 && !t.freeType && !noArg.has(t.stroke));
   return { types, arity0 };
 }
 
@@ -295,9 +318,10 @@ export function expandLineFlag(entries: TypedEntry[]): TypedEntry[] {
     out.push(e); // default: multi-line
     const hasBreak = e.template.some((c) => c.k === "bodybreak");
     if (e.terminal && hasBreak && !e.source.multiline) {
+      // The one-liner decision is made up front, so U rides the FIRST stroke
+      // (the construct's base), not the final type stroke.
       const segs = e.stroke.split("/");
-      const i = segs.length - 1;
-      segs[i] = addKey(segs[i]!, "U");
+      segs[0] = addKey(segs[0]!, "U");
       out.push({ ...e, stroke: segs.join("/"), oneLiner: true });
     }
   }
