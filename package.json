@@ -1,0 +1,17 @@
+{
+  "name": "steno-ts-dict",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Compiler from steno-theory source (.steno) to a Plover JSON dictionary. Stage 1: parser -> AST.",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "typescript": "^5.5.4",
+    "vitest": "^2.1.8"
+  }
+}

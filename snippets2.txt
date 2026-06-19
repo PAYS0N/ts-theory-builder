@@ -1,0 +1,166 @@
+// snippets2.txt — PROPOSED ADDITIONS (intent notation only; NOT yet parsable).
+// Companion to snippets.txt. The formal grammar + how this compiles to a Plover
+// JSON dictionary is described in parsing-plan.md.
+//
+// CONVENTIONS (inherited from snippets.txt)
+//   - STKWR = JS/TS namespace sigil.
+//   - Templates are written in FULL conceptual form for human readability.
+//     The compiler resolves %-operators, brackets/braces, and cursor movement
+//     per the terminal/non-terminal rules below — what is shown is NOT byte-for-
+//     byte what each stroke emits.
+//   - Chords tagged (prov) are PROVISIONAL. Final key choices — especially the
+//     per-construct count-bank keys — are still to be decided with the user.
+//   - TWO dictionaries are generated: smart-brace and plain (no smart brace).
+//     They differ only on closing delimiters. The TYPE-STRING build (the append
+//     chain) always assumes smart brace and DROPS ALL BRACING on non-terminal
+//     strokes, identically in both dicts.
+//
+// =====================================================================
+// TYPING MODEL  (concretizes context.md §4e)
+// =====================================================================
+//   Constructs are built by CHAINING strokes. Return types are APPENDED one
+//   type-stroke at a time. Every type has an ARITY = how many type-args it needs:
+//
+//     arity 0  -> the appending stroke is TERMINAL. It commits the brackets/
+//                 braces and performs the (irreversible) cursor movement to %0.
+//     arity N  -> the appending stroke is NON-TERMINAL until all N args are
+//                 supplied by further appended type-strokes. A non-terminal
+//                 stroke emits ONLY safe, already-established text:
+//                   * NO cursor movement (movement is final-stroke-only), and
+//                   * NOTHING the editor will auto-pair or that must be deleted
+//                     later (placing it would desync Plover's delete->retype,
+//                     because Plover can only revert what it typed, not editor
+//                     auto-closers, and cannot revert movement).
+//
+//   All generics behave like Map: they WAIT for their args (Set/Promise/
+//   Generator/Array included). Nested type-args are out of scope for now.
+//
+//   Worked example (regular function, Map return, 3 params):
+//     STKWR-PBGS/PH-AO-FLT       -> function( , , ): Map                (non-terminal)
+//     STKWR-PBGS/PH-AO-FLT/STR   -> function( , , ): Map string         (non-terminal)
+//     STKWR-PBGS/PH-AO-FLT/STR/TPH
+//                                -> function(%0, , ): Map<string, number> {%b}   (TERMINAL)
+//   stroke 2 = [return-type onset][param-count bank][shape selector -FLT].
+//   The %0 / %b on the terminal line stand in for the real movement commands.
+
+// =====================================================================
+// TYPE APPEND SET  (secondary strokes; NOT valid alone) — with arities
+// =====================================================================
+// '*' suffix on any type = Array<that> ("array of").
+// --- arity 0 (TERMINAL on append) ---
+````TPH````    number
+````STR````    string
+````PW````     boolean
+````TPHR````   null
+````TK````     undefined
+````STPHR````  never
+````TKPW````   bigint
+````SPH````    symbol
+````SR````     void
+````R````      Error
+````TP````     function
+````TKPW```` object
+````STKPWHR````    any
+````TPWH````    unknown
+````SKP````     empty string; for skipping type declarations
+// --- arity 1 (NON-TERMINAL until 1 arg appended) ---
+````PR````     Promise<%t>
+````ST````     Set<%t>
+````SKWR````   Generator<%t>
+// Array<%t> via the '*' suffix.
+// --- arity 2 (NON-TERMINAL until 2 args appended) ---
+````PH````     Map<%t, %t>
+````KR````   Record<%t, %t>
+
+// =====================================================================
+// CLASSES  (context.md §4i)
+// =====================================================================
+````STKWR-BLGS````          class %0 {%b%1}                      
+````STKWR-BLGSD````         class %0 extends %1 {%b%2}           
+````STKWR-BLGSZ````         class %0 implements %t {%b%2}
+
+````TH-R````          this.
+// constructor / get / set = SECOND STROKES of the function root (reuse params/count):
+
+````STKWR-PBGS/RBGT```` constructor(%[%d, %]) {%b%0}
+````STKWR-PBGS/-GT````     get %0(): %t {%b%1}
+````STKWR-PBGS/-FT````    set %0(%1) {%b%2}
+
+
+// =====================================================================
+// DECLARATIONS (no-type variants) + DESTRUCTURING  (context.md §4f, §4g)
+// =====================================================================
+// typed let/const already exist (STKWR-L / STKWR-BGT). Add no-type variants so
+// destructuring patterns compose cleanly onto the name slot:
+````STKWR*L````           const %0 = %1                        
+````STKWR*BGT````         let %0 = %1                          
+// Standalone destructuring patterns — count bank picks slot count; cursor -> slot 1.
+// Drop in after a no-type let/const, or into a param list.
+````STKWR-BGSD````         [%[%d, %]]                           
+````STKWR-BGSZ````        {%[%d, %]}                           
+
+
+// =====================================================================
+// CALLBACK METHOD-ROOT FAMILY  (context.md §4h)
+// =====================================================================
+// Root = "member/method call"; SECOND stroke picks the method. Designed for
+// multiple BASES (Array proto now; String proto later). 'D' suffix = block body
+// { return } variant; bare = expression body.
+````STKWR*PLT````          pre-method (Array base)
+````STKWR*PLT/PHAP````      .map((%0) => %1)
+````STKWR*PLT/PHAPD````     .map((%0) => {\\nreturn %1})
+````STKWR*PLT/TPEURLT````      .filter((%0) => %1)
+````STKWR*PLT/TPEURLTD````     .filter((%0) => {\\nreturn %1})
+````STKWR*PLT/RAOUS````      .reduce((%0, %1) => %2, %3)
+````STKWR*PLT/RAOUSD````     .reduce((%0, %1) => {\\nreturn %2}, %3)
+````STKWR*PLT/TP-R````     .forEach((%0) => %1)
+````STKWR*PLT/TP-RD````     .forEach((%0) => {\\nreturn %1})
+````STKWR*PLT/TP````      .find((%0) => %1)
+````STKWR*PLT/TP-D````      .find((%0) => {\\nreturn %1})
+````STKWR*PLT/TP-BGS````    .findIndex((%0) => %1)
+````STKWR*PLT/TP-BGSD````    .findIndex((%0) => {\\nreturn %1})
+````STKWR*PLT/SOPL````     .some((%0) => %1)
+````STKWR*PLT/SOPLD````     .some((%0) => {\\nreturn %1})
+````STKWR*PLT/EFR````     .every((%0) => %1)
+````STKWR*PLT/EFRD````     .every((%0) => {\\nreturn %1})
+````STKWR*PLT/SORT````      .sort((%0, %1) => %2)
+````STKWR*PLT/SORTD````      .sort((%0, %1) => {\\nreturn %1})
+````STKWR*PLT/TPHRAT````     .flatMap((%0) => %1)
+````STKWR*PLT/TPHRATD````     .flatMap((%0) => {\\nreturn %1})
+// String base (later): STKWR-PLS/... .slice/.split/.replace/.padStart/...
+
+// =====================================================================
+// TRY / CATCH / FINALLY  (context.md §4j) — re-expressed with %b for one-liner
+// =====================================================================
+````STKWR-RT````          try {%b%0} catch (error) {%b%1}        // re-express existing w/ %b
+````STKWR-RTD````         try {%b%0} catch (error) {%b%1} finally {%b%2}   
+````STKWR-FRT````         try {%b%0} finally {%b%1}            
+````STKWR-FL````         finally {%b%0}                        
+
+// =====================================================================
+// DATA STRUCTURES  (context.md §4k) — static root + selector
+// =====================================================================
+// Highest-ROI strokes (large boilerplate). SECOND stroke picks the structure;
+// WHOLE-structure static emission. Braces/newlines handled by the profile.
+// The one per-instance modifier is typed vs untyped (class Node<T> vs class Node)
+// -> presence of a vowel on the selector toggles the generic <T>. Full bodies are
+// TO BE AUTHORED per structure; selectors reserved here.
+````STKWR-RBGT````         pre-struct                             // (prov root)
+````STKWR-RBGT/HR````      singly-linked list
+````STKWR-RBGT/TKHR````     doubly-linked list
+````STKWR-RBGT/S````      stack
+````STKWR-RBGT/KW````      queue
+````STKWR-RBGT/TKX````     deque
+````STKWR-RBGT/H````     min-heap
+````STKWR-RBGT/KPH````    max-heap
+````STKWR-RBGT/TPW````     binary tree
+````STKWR-RBGT/STPW````    BST
+````STKWR-RBGT/TKPWR````     graph (adjacency list)
+````STKWR-RBGT/TR````     trie
+// Future: standalone Node stroke (shared by several structures).
+
+// =====================================================================
+// SMALL SKELETONS  (optional; value is mainly the landing)
+// =====================================================================
+````STKWR-RPBT````        %0 ? %1 : %2                           // (prov; ternary)
+````STKWR-LT````         `${%0}`                                // (prov; template literal)

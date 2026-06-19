@@ -1,0 +1,787 @@
+//do %[%] block d times; selected by adding (A,O,E,U) => (1,2,4,8) to second stroke. type also added to second stroke. final shouldn't have , after it
+````STKWR-PBGS
+pre-func
+````
+````STKWR-PBGS/-FLT
+function %0(%[%d, %]): %t {%b%2}
+````
+````STKWR-PBGS/-R
+(%[%d, %]): %t => {%b%2}
+````
+````STKWR-PBGS/-PL
+%0(%[%d, %]): %t {%b%2}
+````
+````STKWR-PBGS/-PB
+async function %0(%[%d, %]): Promise<%t> {%b%2}
+````
+````STKWR-PBGS/-D
+function* %0(%[%d, %]): Generator<%t> {%b%2}
+````
+````STKWR-PBGS/-F
+(function %0(%[%d, %]): %t {%b%2})();
+````
+````STKWR*F
+else if(%0) {%b%1}
+````
+````STKWR*FT
+else if(!%0) {%b%1}
+````
+````STKWR*FRT
+else if(%0 === false) {%b%1}
+````
+````STKWR*FBT
+else if(%0 === undefined) {%b%1}
+````
+````STKWR*FRBT
+else if(%0 === null) {%b%1}
+````
+````STKWR*FL
+else if(%0 === %1 ) {%b%2}
+````
+````STKWR-F
+if(%0) {%b%1}
+````
+````STKWR-FT
+if(!%0) {%b%1}
+````
+````STKWR-FRT
+if(%0 === false) {%b%1}
+````
+````STKWR-FBT
+if(%0 === undefined) {%b%1}
+````
+````STKWR-FRBT
+if(%0 === null) {%b%1}
+````
+````STKWR-FL
+if(%0 === %1 ) {%b%2}
+````
+````STKWR-LS
+else {%b%0}
+````
+````STKWR-LG
+console.log(%0)
+````
+````STKWR-PBG
+.length
+````
+// CALLBACK METHOD-ROOT FAMILY (§4h): root + selector picks the method.
+// 'D' suffix = block body, ALWAYS multi-line (\n is literal, not %b — the only
+// reason to pick the block form is to want multiple lines).
+// Array base now; String base later (STKWR*PLTS/...).
+````STKWR*PLT
+pre-method
+````
+````STKWR*PLT/PHAP
+.map((%0) => %1)
+````
+````STKWR*PLT/PHAPD
+.map((%0) => {\nreturn %1})
+````
+````STKWR*PLT/TPEURLT
+.filter((%0) => %1)
+````
+````STKWR*PLT/TPEURLTD
+.filter((%0) => {\nreturn %1})
+````
+````STKWR*PLT/RAOUS
+.reduce((%0, %1) => %2, %3)
+````
+````STKWR*PLT/RAOUSD
+.reduce((%0, %1) => {\nreturn %2}, %3)
+````
+````STKWR*PLT/RAOUSZ
+.reduce((acc, curr) => %0, %1)
+````
+````STKWR*PLT/RAOUSZD
+.reduce((acc, curr) => {\nreturn %0}, %1)
+````
+````STKWR*PLT/TP-R
+.forEach((%0) => %1)
+````
+````STKWR*PLT/TP-RD
+.forEach((%0) => {\nreturn %1})
+````
+````STKWR*PLT/TP
+.find((%0) => %1)
+````
+````STKWR*PLT/TP-D
+.find((%0) => {\nreturn %1})
+````
+````STKWR*PLT/TP-BGS
+.findIndex((%0) => %1)
+````
+````STKWR*PLT/TP-BGSD
+.findIndex((%0) => {\nreturn %1})
+````
+````STKWR*PLT/SOPL
+.some((%0) => %1)
+````
+````STKWR*PLT/SOPLD
+.some((%0) => {\nreturn %1})
+````
+````STKWR*PLT/EFR
+.every((%0) => %1)
+````
+````STKWR*PLT/EFRD
+.every((%0) => {\nreturn %1})
+````
+````STKWR*PLT/SORT
+.sort((%0, %1) => %2)
+````
+````STKWR*PLT/SORTD
+.sort((%0, %1) => {\nreturn %2})
+````
+````STKWR*PLT/TPHRAT
+.flatMap((%0) => %1)
+````
+````STKWR*PLT/TPHRATD
+.flatMap((%0) => {\nreturn %1})
+````
+````STKWR*RT
+throw new Error(%0)
+````
+````STKWR-RT
+try {%b%0} catch (error) {%b%1}
+````
+````STKWR-RTD
+try {%b%0} catch (error) {%b%1} finally {%b%2}
+````
+````STKWR-FRT
+try {%b%0} finally {%b%1}
+````
+````STKWR-FL
+finally {%b%0}
+````
+````STKWR-BGS //d should add a new stroke with SKWRAO chars where (S,K,W,R) => (8,4,2,1); 9 is still max
+[%d]
+````
+````STKWR-BGS
+[]
+````
+````STKWR*BGS
+.at()
+````
+//below should duplicate inside the %[%]block d times; adding to the existing stroke's right side (R,B,G,S) => (1,2,4,8)
+````STKWR-FP
+switch(%0) {%b%[case %(2d-1): \n%(2d)\nbreak;\n%]}
+````
+````STKWR-FPD
+switch(%0) {%b%[case %(2d-1): \n%(2d)\nbreak;\n%]default:\n%(2d+1)}
+````
+````STKWR-FPBGS
+case %0:
+	%1
+	break;
+````
+````STKWR-L
+let %0: %t = %1
+````
+````STKWR-BGT
+const %0: %t = %1
+````
+````STKWR-FR
+for(let i = 0; i < %0; i++){%b%1}
+````
+````STKWR-FRPB
+for(let i = %0; i >= 0; i--){%b%1}
+````
+````STKWR-FRPLT
+for( %0 ; %1 ; %2 ){%b%3}
+````
+````STKWR-FRD
+for(const %0 of %1){%b%2}
+````
+````STKWR-FRZ
+for(const key%0 in %1){%b%2}
+````
+````STKWR-FLG
+while(%0) {%b}
+````
+````STKWR-FLGD
+do {%b%1} while (%0)
+````
+
+// Types for secondary strokes - NOT VALID ON THEIR OWN
+// For now, unless there is an obvious solution, ignore the nested cursor placeholders
+// Add * for array of the type with Array<> notation
+// ARITY: unmarked = 0 (terminal on append). Generics carry // arity N and stay
+// NON-TERMINAL until N type-args are appended (all behave like Map).
+````TPH
+number
+````
+````STR
+string
+````
+````PW
+boolean
+````
+````TPHR
+null
+````
+````TK
+undefined
+````
+````STPHR
+never
+````
+````TKPW
+bigint
+````
+````SPH
+symbol
+````
+````SR
+void
+````
+````STKPWHR
+any
+````
+````TPWH
+unknown
+````
+````SKP
+
+````
+````SKPWR
+object
+````
+````PR
+Promise<%t>
+````
+// arity 1
+````PH
+Map<%t, %t>
+````
+// arity 2
+````KR
+Record<%t, %t>
+````
+// arity 2
+````ST
+Set<%t>
+````
+// arity 1
+````R
+Error
+````
+````TP
+function
+````
+````SKWR
+Generator<%t>
+````
+// arity 1
+
+// =====================================================================
+// CLASSES (§4i)
+// =====================================================================
+````STKWR-BLGS
+class %0 {%b%1}
+````
+````STKWR-BLGSD
+class %0 extends %1 {%b%2}
+````
+````STKWR-BLGSZ
+class %0 implements %t {%b%2}
+````
+// typed class via appended type stroke: class %0<%t> {%b%1}
+````TH-R
+this.
+````
+// constructor / get / set = SECOND STROKES of the function root (reuse params/count)
+````STKWR-PBGS/RBGT
+constructor(%[%d, %]) {%b%0}
+````
+````STKWR-PBGS/-GT
+get %0(): %t {%b%1}
+````
+````STKWR-PBGS/-FT
+set %0(%1) {%b%2}
+````
+
+// =====================================================================
+// DECLARATIONS (no-type variants) + DESTRUCTURING (§4f, §4g)
+// =====================================================================
+// typed let/const already exist above (STKWR-L / STKWR-BGT).
+````STKWR*L
+let %0 = %1
+````
+````STKWR*BGT
+const %0 = %1
+````
+// Standalone destructuring patterns — count bank picks slot count; cursor -> slot 1.
+// Drop in after a no-type let/const, or into a param list.
+````STKWR-BGSD
+[%[%d, %]]
+````
+````STKWR-BGSZ
+{%[%d, %]}
+````
+
+// =====================================================================
+// DATA STRUCTURES (§4k): static root + selector; whole-structure emission.
+// Shown TYPED (generic <T>). The untyped selector-variant strips every <T> and
+// `: T`. Trie is string-keyed and has no <T>.
+// =====================================================================
+````STKWR-RBGT
+pre-struct
+````
+````STKWR-RBGT/HR
+class ListNode<T> {
+	value: T;
+	next: ListNode<T> | null = null;
+	constructor(value: T) {
+		this.value = value;
+	}
+}
+
+class LinkedList<T> {
+	head: ListNode<T> | null = null;
+	tail: ListNode<T> | null = null;
+	size = 0;
+
+	// removeLast is inherently O(n) for a singly-linked list (no prev pointer),
+	// so the all-O(1) interface is addFirst / addLast / removeFirst.
+	addFirst(value: T): void {
+		const node = new ListNode(value);
+		node.next = this.head;
+		this.head = node;
+		if (!this.tail) this.tail = node;
+		this.size++;
+	}
+
+	addLast(value: T): void {
+		const node = new ListNode(value);
+		if (this.tail) {
+			this.tail.next = node;
+		} else {
+			this.head = node;
+		}
+		this.tail = node;
+		this.size++;
+	}
+
+	removeFirst(): T | undefined {
+		if (!this.head) return undefined;
+		const value = this.head.value;
+		this.head = this.head.next;
+		if (!this.head) this.tail = null;
+		this.size--;
+		return value;
+	}
+}
+````
+````STKWR-RBGT/TKHR
+class DListNode<T> {
+	value: T;
+	prev: DListNode<T> | null = null;
+	next: DListNode<T> | null = null;
+	constructor(value: T) {
+		this.value = value;
+	}
+}
+
+class DoublyLinkedList<T> {
+	head: DListNode<T> | null = null;
+	tail: DListNode<T> | null = null;
+	size = 0;
+
+	push(value: T): void {
+		const node = new DListNode(value);
+		if (this.tail) {
+			node.prev = this.tail;
+			this.tail.next = node;
+		} else {
+			this.head = node;
+		}
+		this.tail = node;
+		this.size++;
+	}
+
+	pop(): T | undefined {
+		if (!this.tail) return undefined;
+		const value = this.tail.value;
+		this.tail = this.tail.prev;
+		if (this.tail) {
+			this.tail.next = null;
+		} else {
+			this.head = null;
+		}
+		this.size--;
+		return value;
+	}
+}
+````
+````STKWR-RBGT/S
+class Stack<T> {
+	private items: T[] = [];
+
+	push(value: T): void {
+		this.items.push(value);
+	}
+
+	pop(): T | undefined {
+		return this.items.pop();
+	}
+
+	peek(): T | undefined {
+		return this.items[this.items.length - 1];
+	}
+
+	get size(): number {
+		return this.items.length;
+	}
+
+	isEmpty(): boolean {
+		return this.items.length === 0;
+	}
+}
+````
+````STKWR-RBGT/KW
+class Queue<T> {
+	private items = new Map<number, T>();
+	private head = 0;
+	private tail = 0;
+
+	enqueue(value: T): void {
+		this.items.set(this.tail++, value);
+	}
+
+	dequeue(): T | undefined {
+		if (this.head === this.tail) return undefined;
+		const value = this.items.get(this.head);
+		this.items.delete(this.head++);
+		return value;
+	}
+
+	peek(): T | undefined {
+		return this.items.get(this.head);
+	}
+
+	get size(): number {
+		return this.tail - this.head;
+	}
+}
+````
+````STKWR-RBGT/TKX
+class Deque<T> {
+	private items = new Map<number, T>();
+	private head = 0; // index of current front
+	private tail = 0; // one past current back
+
+	pushFront(value: T): void {
+		this.items.set(--this.head, value);
+	}
+
+	pushBack(value: T): void {
+		this.items.set(this.tail++, value);
+	}
+
+	popFront(): T | undefined {
+		if (this.head === this.tail) return undefined;
+		const value = this.items.get(this.head);
+		this.items.delete(this.head++);
+		return value;
+	}
+
+	popBack(): T | undefined {
+		if (this.head === this.tail) return undefined;
+		const value = this.items.get(--this.tail);
+		this.items.delete(this.tail);
+		return value;
+	}
+
+	peekFront(): T | undefined {
+		return this.items.get(this.head);
+	}
+
+	peekBack(): T | undefined {
+		return this.items.get(this.tail - 1);
+	}
+
+	get size(): number {
+		return this.tail - this.head;
+	}
+}
+````
+````STKWR-RBGT/H
+class MinHeap<T> {
+	private heap: T[] = [];
+
+	constructor(private compare: (a: T, b: T) => number = (a, b) => (a < b ? -1 : a > b ? 1 : 0)) {}
+
+	push(value: T): void {
+		this.heap.push(value);
+		this.bubbleUp(this.heap.length - 1);
+	}
+
+	pop(): T | undefined {
+		if (this.heap.length === 0) return undefined;
+		const top = this.heap[0];
+		const last = this.heap.pop()!;
+		if (this.heap.length > 0) {
+			this.heap[0] = last;
+			this.bubbleDown(0);
+		}
+		return top;
+	}
+
+	peek(): T | undefined {
+		return this.heap[0];
+	}
+
+	get size(): number {
+		return this.heap.length;
+	}
+
+	private bubbleUp(i: number): void {
+		while (i > 0) {
+			const parent = (i - 1) >> 1;
+			if (this.compare(this.heap[i], this.heap[parent]) >= 0) break;
+			[this.heap[i], this.heap[parent]] = [this.heap[parent], this.heap[i]];
+			i = parent;
+		}
+	}
+
+	private bubbleDown(i: number): void {
+		const n = this.heap.length;
+		while (true) {
+			let smallest = i;
+			const left = 2 * i + 1;
+			const right = 2 * i + 2;
+			if (left < n && this.compare(this.heap[left], this.heap[smallest]) < 0) smallest = left;
+			if (right < n && this.compare(this.heap[right], this.heap[smallest]) < 0) smallest = right;
+			if (smallest === i) break;
+			[this.heap[i], this.heap[smallest]] = [this.heap[smallest], this.heap[i]];
+			i = smallest;
+		}
+	}
+}
+````
+````STKWR-RBGT/KPH
+class MaxHeap<T> {
+	private heap: T[] = [];
+
+	constructor(private compare: (a: T, b: T) => number = (a, b) => (a > b ? -1 : a < b ? 1 : 0)) {}
+
+	push(value: T): void {
+		this.heap.push(value);
+		this.bubbleUp(this.heap.length - 1);
+	}
+
+	pop(): T | undefined {
+		if (this.heap.length === 0) return undefined;
+		const top = this.heap[0];
+		const last = this.heap.pop()!;
+		if (this.heap.length > 0) {
+			this.heap[0] = last;
+			this.bubbleDown(0);
+		}
+		return top;
+	}
+
+	peek(): T | undefined {
+		return this.heap[0];
+	}
+
+	get size(): number {
+		return this.heap.length;
+	}
+
+	private bubbleUp(i: number): void {
+		while (i > 0) {
+			const parent = (i - 1) >> 1;
+			if (this.compare(this.heap[i], this.heap[parent]) >= 0) break;
+			[this.heap[i], this.heap[parent]] = [this.heap[parent], this.heap[i]];
+			i = parent;
+		}
+	}
+
+	private bubbleDown(i: number): void {
+		const n = this.heap.length;
+		while (true) {
+			let largest = i;
+			const left = 2 * i + 1;
+			const right = 2 * i + 2;
+			if (left < n && this.compare(this.heap[left], this.heap[largest]) < 0) largest = left;
+			if (right < n && this.compare(this.heap[right], this.heap[largest]) < 0) largest = right;
+			if (largest === i) break;
+			[this.heap[i], this.heap[largest]] = [this.heap[largest], this.heap[i]];
+			i = largest;
+		}
+	}
+}
+````
+````STKWR-RBGT/TPW
+class TreeNode<T> {
+	value: T;
+	left: TreeNode<T> | null = null;
+	right: TreeNode<T> | null = null;
+	constructor(value: T) {
+		this.value = value;
+	}
+}
+
+class BinaryTree<T> {
+	root: TreeNode<T> | null = null;
+
+	insertLevelOrder(value: T): void {
+		const node = new TreeNode(value);
+		if (!this.root) {
+			this.root = node;
+			return;
+		}
+		const queue: TreeNode<T>[] = [this.root];
+		let qi = 0;
+		while (qi < queue.length) {
+			const curr = queue[qi++];
+			if (!curr.left) {
+				curr.left = node;
+				return;
+			}
+			queue.push(curr.left);
+			if (!curr.right) {
+				curr.right = node;
+				return;
+			}
+			queue.push(curr.right);
+		}
+	}
+
+	inorder(node: TreeNode<T> | null = this.root, result: T[] = []): T[] {
+		if (node) {
+			this.inorder(node.left, result);
+			result.push(node.value);
+			this.inorder(node.right, result);
+		}
+		return result;
+	}
+}
+````
+````STKWR-RBGT/STPW
+class BSTNode<T> {
+	value: T;
+	left: BSTNode<T> | null = null;
+	right: BSTNode<T> | null = null;
+	constructor(value: T) {
+		this.value = value;
+	}
+}
+
+class BST<T> {
+	root: BSTNode<T> | null = null;
+
+	constructor(private compare: (a: T, b: T) => number = (a, b) => (a < b ? -1 : a > b ? 1 : 0)) {}
+
+	insert(value: T): void {
+		this.root = this.insertNode(this.root, value);
+	}
+
+	private insertNode(node: BSTNode<T> | null, value: T): BSTNode<T> {
+		if (!node) return new BSTNode(value);
+		if (this.compare(value, node.value) < 0) {
+			node.left = this.insertNode(node.left, value);
+		} else {
+			node.right = this.insertNode(node.right, value);
+		}
+		return node;
+	}
+
+	has(value: T): boolean {
+		let node = this.root;
+		while (node) {
+			const cmp = this.compare(value, node.value);
+			if (cmp === 0) return true;
+			node = cmp < 0 ? node.left : node.right;
+		}
+		return false;
+	}
+}
+````
+````STKWR-RBGT/TKPWR
+class Graph<T> {
+	private adj = new Map<T, T[]>();
+
+	addVertex(v: T): void {
+		if (!this.adj.has(v)) this.adj.set(v, []);
+	}
+
+	addEdge(u: T, v: T, directed = false): void {
+		this.addVertex(u);
+		this.addVertex(v);
+		this.adj.get(u)!.push(v);
+		if (!directed) this.adj.get(v)!.push(u);
+	}
+
+	neighbors(v: T): T[] {
+		return this.adj.get(v) ?? [];
+	}
+
+	bfs(start: T): T[] {
+		const visited = new Set<T>([start]);
+		const queue: T[] = [start];
+		const order: T[] = [];
+		let qi = 0;
+		while (qi < queue.length) {
+			const v = queue[qi++];
+			order.push(v);
+			for (const next of this.neighbors(v)) {
+				if (!visited.has(next)) {
+					visited.add(next);
+					queue.push(next);
+				}
+			}
+		}
+		return order;
+	}
+}
+````
+````STKWR-RBGT/TR
+class TrieNode {
+	children: Map<string, TrieNode> = new Map();
+	isEnd = false;
+}
+
+class Trie {
+	root = new TrieNode();
+
+	insert(word: string): void {
+		let node = this.root;
+		for (const ch of word) {
+			if (!node.children.has(ch)) node.children.set(ch, new TrieNode());
+			node = node.children.get(ch)!;
+		}
+		node.isEnd = true;
+	}
+
+	search(word: string): boolean {
+		const node = this.find(word);
+		return node !== null && node.isEnd;
+	}
+
+	startsWith(prefix: string): boolean {
+		return this.find(prefix) !== null;
+	}
+
+	private find(word: string): TrieNode | null {
+		let node = this.root;
+		for (const ch of word) {
+			const next = node.children.get(ch);
+			if (!next) return null;
+			node = next;
+		}
+		return node;
+	}
+}
+````
+
+// =====================================================================
+// SMALL SKELETONS (value is mainly the landing)
+// =====================================================================
+````STKWR-RPBT
+%0 ? %1 : %2
+````
+````STKWR-LT
+`${%0}`
+````

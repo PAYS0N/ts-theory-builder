@@ -1,0 +1,146 @@
+# dict.steno — strict, parsable source for the Plover JS/TS dictionary.
+# Human-readable intent lives in ../snippets.txt; this is the machine source.
+# (Representative slice that exercises every grammar feature; full migration of
+#  snippets.txt is the next step, pending the count-bank key decisions.)
+#
+# Syntax:
+#   ````STROKE ... ````                 entry: stroke on the open fence, template between fences
+#   @count KEYS / @arity N / @multiline directives attach to the entry above
+#   # or //                             line comments
+# Template operators:
+#   %0-9  landing point (plain profile lands on %0; the rest are snippet tabstops)
+#   %d    count from the @count bank.
+#           standalone  -> the number, 0 included   e.g. [%d] -> [0] | [1] .. [n]
+#           inside %[%] -> an incrementing landing (%0,%1,%2,...), one per
+#                          iteration; the repeat itself runs `count` times
+#   %t    type-slot, filled by an appended type stroke
+#   %b    body-break (the one-liner flag toggles every %b in a translation together)
+#   %p    pattern-slot
+#   %[ sep | body %]  repeat; sep is a joiner, never emitted after the last item
+#   %(EXPR)  computed index, linear in d
+#   escapes: \n \t \{ \} \% \| \\ \`
+
+# ---- functions: param count = AOEU bank; return type appended via %t ----
+````STKWR-PBGS/-FLT
+function %0(%[, |%d%]): %t {%b%2}
+````
+@count AOEU
+
+````STKWR-PBGS/-PB
+async function %0(%[, |%d%]): Promise<%t> {%b%2}
+````
+@count AOEU
+
+# ---- conditionals ----
+````STKWR-F
+if (%0) {%b%1}
+````
+
+````STKWR-FL
+if (%0 === %1) {%b%2}
+````
+
+````STKWR-LS
+else {%b%0}
+````
+
+# ---- loops ----
+````STKWR-FR
+for (let i = 0; i < %0; i++) {%b%1}
+````
+
+````STKWR-FRD
+for (const %0 of %1) {%b%2}
+````
+
+````STKWR-FLG
+while (%0) {%b}
+````
+
+# ---- switch: case count = RBGS bank; %(2d-1)/%(2d) derive per-case slots ----
+````STKWR-FP
+switch (%0) {%b%[case %(2d-1):\n%(2d)\nbreak;\n%]}
+````
+@count RBGS
+@multiline
+
+# ---- indexing: count = FPLT bank (number < 16); [%d] -> [0] .. [15] ----
+````STKWR-BGS
+[%d]
+````
+@count FPLT
+
+# ---- declarations ----
+````STKWR-L
+let %0: %t = %1
+````
+
+````STKWR*L
+const %0 = %1
+````
+
+# ---- destructuring pattern: slot count via AOEU bank ----
+````STKWR-BGSD
+[%[, |%p%]]
+````
+@count AOEU
+
+# ---- try / catch / finally: one-liner flag toggles every %b together ----
+````STKWR-RT
+try {%b%0} catch (error) {%b%1}
+````
+
+````STKWR-RTD
+try {%b%0} catch (error) {%b%1} finally {%b%2}
+````
+
+# ---- console / misc ----
+````STKWR-LG
+console.log(%0)
+````
+
+````STKWR-RPBT
+%0 ? %1 : %2
+````
+
+````STKWR-LT
+`${%0}`
+````
+
+# ---- type append set: arity drives terminal vs non-terminal ----
+````TPH
+number
+````
+
+````STR
+string
+````
+
+````PR
+Promise<%t>
+````
+@arity 1
+
+````PH
+Map<%t, %t>
+````
+@arity 2
+
+# ---- a full multi-line literal block parses as lit + brace chunks ----
+````STKWR-RBGT/S
+class Stack<T> {
+	private items: T[] = [];
+
+	push(value: T): void {
+		this.items.push(value);
+	}
+
+	pop(): T | undefined {
+		return this.items.pop();
+	}
+
+	get size(): number {
+		return this.items.length;
+	}
+}
+````
