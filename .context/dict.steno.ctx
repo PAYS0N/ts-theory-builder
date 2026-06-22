@@ -1,0 +1,11 @@
+file: dict.steno
+purpose: Plover steno dictionary defining TypeScript/JavaScript code-snippet strokes. Each entry maps a steno stroke (or multi-stroke sequence) to a template with cursor landing points, type slots, repeat blocks, and directives controlling arity, count encoding, and literal emission.
+invariants:
+  - Multi-stroke entries use `/` between strokes; the first stroke alone emits a `pre-*` sentinel or nothing.
+  - `@fuse` entries require an appended type stroke before the entry is terminal.
+  - `@count AOE` entries encode a repeat count 0–7 via the AOE vowel bank bits.
+  - `@literal` entries emit their template verbatim with no template-operator substitution.
+  - `@type` entries are not valid standalone; they are appended to fuse-marked entries.
+external_deps:
+  - src/parse.ts: the sole consumer that interprets this file's syntax and directives
+functions:

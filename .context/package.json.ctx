@@ -1,0 +1,7 @@
+file: package.json
+purpose: Node.js project manifest for a steno-theory compiler that transforms `.steno` source files into Plover JSON dictionaries. Defines build, test, and typecheck scripts using native TypeScript stripping (no bundler).
+invariants:
+  - All scripts run via `node --experimental-strip-types`; no transpile/bundle step.
+external_deps:
+  - vitest: test runner and watch mode.
+functions:

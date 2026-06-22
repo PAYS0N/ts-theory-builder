@@ -1,0 +1,6 @@
+directory: nvim/lua
+summary: Neovim Lua plugin root. Exposes the `steno-ts` plugin to callers via `require("steno-ts")`, providing a steno-aware snippet expander keyed off Plover-emitted sentinel tokens.
+children:
+  - steno-ts/: The complete plugin implementation — setup entrypoint, token detection, and LSP snippet expansion.
+key_invariants:
+  - All external callers interact solely through `require("steno-ts").setup(opts)`; no other symbols are part of the public contract.

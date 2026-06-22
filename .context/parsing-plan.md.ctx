@@ -1,0 +1,10 @@
+file: parsing-plan.md
+purpose: Design document specifying the full pipeline from a fenced `.steno` source format to committed Plover JSON dictionaries. Defines the source grammar, template DSL, five compiler passes (count expansion, type-append, profile application, movement compilation, serialization), validation rules, and TypeScript implementation layout. No code exists yet; this is a proposal.
+invariants:
+  - Movement is compiled in Pass D only after Passes A–C have produced final rendered text.
+  - NON-TERMINAL entries never receive movement instructions or auto-paired delimiters.
+  - Type-append chain always behaves as smart-brace regardless of output profile.
+  - `K` (leftward movement count) is measured from line end, making it indent-independent.
+  - Count banks are capped at their own bit-width; no silent autocorrection of landing conflicts.
+external_deps:
+functions:

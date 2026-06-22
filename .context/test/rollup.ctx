@@ -1,0 +1,13 @@
+directory: test
+summary: End-to-end and unit test coverage for the full steno dictionary pipeline: parsing, stroke encoding, count/type expansion, and all three render targets (plain, smart, snippet). Every test suite exercises the real `dict.steno` corpus at least once, making the file a shared integration fixture across the suite.
+children:
+  - steno.test.ts: Validates the stroke encoding layer (`parseStroke`/`renderStroke`/`countBank`/`applyCount`) in isolation.
+  - parse.test.ts: Validates template and source parsing, including corpus-level duplicate-stroke detection.
+  - expand.test.ts: Covers count fan-out and stroke merging logic with both unit cases and a full corpus round-trip.
+  - types.test.ts: Covers the type-expansion pipeline (`expandTypesOne`, `buildTypeSet`, `expandDict`) including arity and terminal rules.
+  - render.test.ts: Validates `renderPlain` and `buildPlainDict` against the live corpus.
+  - smart.test.ts: Validates `renderSmart` and `buildSmartDict`, including cursor placement and collision freedom.
+  - snippet.test.ts: Validates `renderSnippet` and `buildSnippets`, including tabstop numbering and escaping.
+key_invariants:
+  - `dict.steno` is loaded from disk in every integration suite; no mocked dictionaries substitute for it.
+  - All suites are read-only; no source files are mutated during test runs.

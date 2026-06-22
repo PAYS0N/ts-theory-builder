@@ -1,0 +1,7 @@
+file: test/render.test.ts
+purpose: Integration tests for `renderPlain` and `buildPlainDict` against the real `dict.steno` dictionary.
+invariants:
+  - Tests load and expand the actual `dict.steno` file at module scope; all lookups assume entries exist.
+external_deps:
+  - vitest: test runner and assertion library
+functions:

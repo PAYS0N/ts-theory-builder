@@ -1,0 +1,18 @@
+file: src/parse.ts
+purpose: Converts raw `.steno` source text into a typed `Entry[]` AST. Handles fence-delimited blocks, template chunk parsing, and `@`-directives. Does not expand, compile, or emit.
+invariants:
+  - `parseSource` throws `StenoError` (with 1-based line number) on any malformed input; never returns partial results silently.
+  - `parseTemplate` throws `StenoError` on unterminated constructs, unknown escapes, or bad expressions.
+  - `Entry.stroke` is always a non-empty array of trimmed slash-split segments.
+external_deps:
+functions:
+  - name: parseTemplate
+    signature: export function parseTemplate(src: string, line?: number): Chunk[]
+    purpose: Parses a single template string into a `Chunk[]`, recognising literals, escapes, braces, `%`-operators, and nested `%[…%]` repeats.
+  - name: parseSource
+    signature: export function parseSource(src: string): Entry[]
+    purpose: Splits source into fence-delimited entries and trailing `@`-directives, returning a fully populated `Entry[]`.
+  - name: applyDirective
+    signature: function applyDirective(e: Entry, line: string, lineNo: number): void
+    purpose: Parses and applies a single `@`-directive to an existing entry, mutating the relevant optional field.
+    notes: Throws on unknown directive names or invalid argument values.

@@ -1,0 +1,7 @@
+file: test/snippet.test.ts
+purpose: Integration tests for `renderSnippet` and `buildSnippets`, verifying tabstop numbering, escaping, partial (non-terminal) rendering, and the full Plover-key-to-snippet pipeline against the real `dict.steno` dictionary.
+invariants:
+  - All tests load the actual `dict.steno` file; there are no mocked dictionaries.
+external_deps:
+  - vitest: test runner
+functions:

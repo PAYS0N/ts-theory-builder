@@ -1,0 +1,8 @@
+file: snippets2.txt
+purpose: Proposed Plover steno chord-to-code-template mappings for JS/TS constructs, extending snippets.txt. Defines the typing model (arity-based chaining), type-append strokes, class/declaration/callback/control-flow/data-structure skeletons, and their cursor-placement notation. Not yet parsable; intent notation only.
+invariants:
+  - Non-terminal strokes emit no cursor movement and no auto-pairable characters; only terminal strokes emit %0/%b movement.
+  - Arity determines terminality: arity-0 type strokes are terminal, arity-1 and arity-2 are non-terminal until all args are supplied.
+  - STKWR is the JS/TS namespace sigil on all root chords.
+external_deps:
+functions:

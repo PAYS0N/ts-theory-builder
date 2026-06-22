@@ -1,0 +1,16 @@
+file: nvim/lua/steno-ts/init.lua
+purpose: Neovim plugin that watches insert-mode text changes and expands Plover-emitted «keyId» sentinel tokens into LSP snippets loaded from a JSON file.
+invariants:
+  - Expansion only fires when the cursor is immediately after a complete «…» token on the current line.
+  - Snippet expansion is skipped entirely if `vim.snippet` is unavailable (Neovim < 0.10).
+external_deps:
+functions:
+  - name: M.setup
+    signature: function M.setup(opts)
+    purpose: Merges user config, loads snippets JSON, and registers FileType autocmd to attach the expander to qualifying buffers.
+  - name: M._try_expand
+    signature: function try_expand()
+    purpose: Detects a complete token before the cursor, deletes it, and expands the matching snippet body in-place.
+  - name: M._token_before_cursor
+    signature: function token_before_cursor()
+    purpose: Returns the keyId string and 0-indexed start byte column of a complete «…» token ending at the cursor, or nil if none.

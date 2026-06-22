@@ -50,6 +50,10 @@ export interface Entry {
   /** @fuse — fuse the last stroke segment into the first appended type stroke
    * (so the type-less intermediate is never a required stroke). */
   fuse?: boolean;
+  /** @literal — a complete pre-formatted block: the smart profile emits it
+   * byte-identical to plain (no closer-drop), since a smart editor mangles
+   * whole-code dumps regardless of profile. */
+  literal?: boolean;
   /** 1-based line of the opening fence. */
   line: number;
 }
@@ -311,6 +315,9 @@ function applyDirective(e: Entry, line: string, lineNo: number): void {
       return;
     case "fuse":
       e.fuse = true;
+      return;
+    case "literal":
+      e.literal = true;
       return;
     default:
       throw new StenoError(`unknown directive @${name}`, lineNo);

@@ -1,0 +1,6 @@
+file: test/smart.test.ts
+purpose: Integration tests for `renderSmart`, `renderPlain`, and `buildSmartDict` against the real `dict.steno` dictionary. Verifies cursor-placement logic, trailing-closer suppression, parity with plain rendering, and collision-free dict construction.
+invariants:
+  - Tests load and parse the actual `dict.steno` file at module scope; all `get()` calls assert non-null.
+external_deps:
+functions:

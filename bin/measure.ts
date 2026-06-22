@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { parseSource, parseTemplate, type Entry } from "../src/parse.ts";
 import { expandDict } from "../src/expand.ts";
-import { buildPlainDict } from "../src/render.ts";
+import { buildPlainDict, buildSmartDict } from "../src/render.ts";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const entries = parseSource(readFileSync(join(root, "dict.steno"), "utf8"));
@@ -36,11 +36,18 @@ const POOLS: [string, string[] | undefined][] = [
 ];
 
 function measure(label: string, es: Entry[], pool: string[] | undefined): void {
-  const { dict, collisions } = buildPlainDict(expandDict(es, pool));
-  const mb = (JSON.stringify(dict).length / 1e6).toFixed(2);
-  const warn = collisions.length ? `  (${new Set(collisions).size} collisions!)` : "";
+  const typed = expandDict(es, pool);
+  const plain = buildPlainDict(typed);
+  const smart = buildSmartDict(typed);
+  const mb = (r: ReturnType<typeof buildPlainDict>) =>
+    (JSON.stringify(r.dict).length / 1e6).toFixed(2);
+  const both = (JSON.stringify(plain.dict).length + JSON.stringify(smart.dict).length) / 1e6;
+  const warn = plain.collisions.length
+    ? `  (${new Set(plain.collisions).size} collisions!)`
+    : "";
   console.log(
-    `  ${label.padEnd(32)} ${String(Object.keys(dict).length).padStart(6)} strokes  ${mb.padStart(6)} MB${warn}`,
+    `  ${label.padEnd(32)} ${String(Object.keys(plain.dict).length).padStart(6)} strokes  ` +
+      `plain ${mb(plain).padStart(6)}  smart ${mb(smart).padStart(6)}  both ${both.toFixed(2).padStart(6)} MB${warn}`,
   );
 }
 

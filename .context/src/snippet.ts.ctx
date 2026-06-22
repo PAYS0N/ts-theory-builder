@@ -1,0 +1,15 @@
+file: src/snippet.ts
+purpose: Renders TypedEntry values to LSP snippet bodies with tabstops derived from landings, and assembles Plover dictionary and snippet table artifacts.
+invariants:
+  - Landing with the highest number maps to tabstop ${0} (LSP exit); all others map to ${1}..${k} in ascending order.
+  - Non-terminal entries produce bracket-stripped, tabstop-free bodies.
+  - `$`, `\`, and `}` in literal text are always backslash-escaped; lone `{` is emitted unescaped.
+external_deps:
+functions:
+  - name: renderSnippet
+    signature: export function renderSnippet(entry: TypedEntry): SnippetEntry
+    purpose: Converts one TypedEntry into an LSP snippet body with tabstops (terminal) or a bracket-stripped partial (non-terminal).
+    notes: Throws SnippetError on any unresolved chunk kind reaching the renderer.
+  - name: buildSnippets
+    signature: export function buildSnippets(entries: TypedEntry[]): SnippetBuild
+    purpose: Renders all entries and assembles the Plover stroke→sentinel-token dictionary, the keyId→body snippet table, and a list of collision keyIds.

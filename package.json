@@ -6,6 +6,7 @@
   "description": "Compiler from steno-theory source (.steno) to a Plover JSON dictionary. Stage 1: parser -> AST.",
   "scripts": {
     "build": "node --experimental-strip-types bin/build.ts",
+    "build:nvim": "node --experimental-strip-types bin/build-nvim.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"

@@ -1,0 +1,10 @@
+file: bin/build-nvim.ts
+purpose: CLI build script that reads `dict.steno`, runs the full parse→expand→snippet pipeline, and writes `out/plover-keys.json` and `out/snippets.json`. Exits with code 1 if any keyset collisions are detected.
+invariants:
+  - Aborts before writing any output if `collisions` is non-empty.
+  - Output directory is created recursively if absent.
+external_deps:
+functions:
+  - name: writeJson
+    signature: function writeJson(name: string, obj: Record<string, string>): number
+    purpose: Serializes a string-to-string map as deterministic JSON (one key per line) into `out/<name>`, logs entry count and size, and returns byte length.

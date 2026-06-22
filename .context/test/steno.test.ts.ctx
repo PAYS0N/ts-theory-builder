@@ -1,0 +1,6 @@
+file: test/steno.test.ts
+purpose: Vitest test suite for `parseStroke`, `renderStroke`, `countBank`, and `applyCount` from `src/steno.ts`. Covers round-trip fidelity, error paths, and bit-weight encoding.
+invariants:
+external_deps:
+  - vitest: test runner and assertion library.
+functions:

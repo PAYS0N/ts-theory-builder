@@ -1,0 +1,7 @@
+file: js.json
+purpose: Plover stenography dictionary mapping chord sequences to JavaScript/TypeScript code snippets. Covers control flow, variable declarations with type annotations, function definitions, and array indexing.
+invariants:
+  - All entries use `{^}` prefix to suppress preceding space before insertion.
+  - Cursor-positioning after insertion is done exclusively via `{#Up}` and `{#Left}`/`{#Right}` key sequences.
+external_deps:
+functions:

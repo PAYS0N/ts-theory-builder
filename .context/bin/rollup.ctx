@@ -1,0 +1,9 @@
+directory: bin
+summary: Three CLI scripts form the build and measurement surface for the steno dictionary pipeline. `build.ts` and `build-nvim.ts` each run the full parse→expand→render pipeline and write output JSON files; `measure.ts` benchmarks output size across configuration axes without writing files.
+children:
+  - build.ts: Produces `out/plain.json` and `out/smart.json` Plover dictionaries; guards against collision-tainted output.
+  - build-nvim.ts: Produces `out/plover-keys.json` and `out/snippets.json` for Neovim integration; same collision guard.
+  - measure.ts: Exploration tool for comparing dictionary sizes across pool sizes and function-shape variants; not part of the build chain.
+key_invariants:
+  - Both build scripts abort with exit code 1 before writing any output if collisions are detected.
+  - All output files land under `out/`, created recursively if absent.

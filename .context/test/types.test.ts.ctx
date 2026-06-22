@@ -1,0 +1,14 @@
+file: test/types.test.ts
+purpose: Integration and unit tests for `expandTypesOne`, `expandCounts`, `buildTypeSet`, and `expandDict` from the expand pipeline. Verifies type-append chain structure, stroke uniqueness, arity-based terminal/non-terminal rules, and end-to-end dict expansion.
+invariants:
+  - Tests are read-only; no source files are mutated.
+external_deps:
+  - vitest: test runner and assertion library
+  - node:fs / node:url: reads `dict.steno` from the repo root for integration tests
+functions:
+  - name: show
+    signature: function show(chunks: Chunk[]): string
+    purpose: Serializes a `Chunk[]` to a human-readable string for snapshot-style assertions, mapping each chunk kind to a short token.
+  - name: construct
+    signature: function construct(template: string, stroke?: string): ReturnType<typeof expandTypesOne>
+    purpose: Parses a single steno entry from a template string, expands counts, and returns the type-expanded chain for use in tests.

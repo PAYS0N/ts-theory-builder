@@ -1,0 +1,7 @@
+file: tsconfig.json
+purpose: TypeScript compiler configuration targeting ES2022 with strict mode, bundler module resolution, and no emit (type-checking only).
+invariants:
+  - noEmit is true; this config never produces output files.
+  - Covers src and test directories only.
+external_deps:
+functions:

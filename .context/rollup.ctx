@@ -1,0 +1,18 @@
+directory: .
+summary: Root of a steno dictionary compiler that transforms `.steno` source files into Plover JSON dictionaries and Neovim LSP snippets. The pipeline runs parse→expand→render in `src/`, is exercised by `test/`, and is driven by CLI scripts in `bin/`. Design documents (`context.md`, `parsing-plan.md`, `snippets.txt`, `snippets2.txt`) and legacy hand-authored dictionaries (`js.json`, `dict.steno`) coexist with the compiler implementation.
+children:
+  - src/: Full compilation pipeline from `.steno` AST to Plover and LSP snippet output.
+  - test/: Integration and unit coverage for every pipeline stage, using `dict.steno` as a shared corpus fixture.
+  - bin/: CLI entry points that invoke the pipeline and write output files under `out/`.
+  - nvim/: Neovim plugin that consumes the snippet output at runtime via `require("steno-ts").setup(opts)`.
+  - dict.steno: Canonical source dictionary consumed by `src/parse.ts`; also the integration test fixture.
+  - js.json: Legacy hand-authored Plover dictionary predating the compiler.
+  - context.md: Locked architecture decisions and open questions for the steno theory design.
+  - parsing-plan.md: Compiler pipeline specification (passes A–D, grammar, DSL) used as the design contract for `src/`.
+  - snippets.txt / snippets2.txt: Pre-compiler stroke-to-template sketches; not parsed by any current code.
+  - package.json: Project manifest; all scripts run via `node --experimental-strip-types`, no bundler.
+  - tsconfig.json: Type-check-only config covering `src/` and `test/`.
+key_invariants:
+  - `dict.steno` is the single source of truth for stroke definitions; both the build pipeline and all integration tests read it from disk.
+  - No runtime npm dependencies exist; all package dependencies are devDependencies.
+  - Output files are written only by `bin/` scripts and only after collision checks pass; `src/` and `test/` never write files.

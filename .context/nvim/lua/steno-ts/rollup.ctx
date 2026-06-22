@@ -1,0 +1,7 @@
+directory: nvim/lua/steno-ts
+summary: Single-file Neovim plugin exposing `M.setup` as its entire public surface. Callers get a steno-aware snippet expander that watches insert-mode edits, detects Plover-emitted «keyId» sentinel tokens, and expands them into LSP snippets sourced from a caller-supplied JSON file.
+children:
+  - init.lua: The plugin itself — setup entrypoint, token detection, and in-place snippet expansion.
+key_invariants:
+  - The only public API is `M.setup(opts)`; `_try_expand` and `_token_before_cursor` are internal helpers exposed on the module table for testing only.
+  - Expansion is a no-op on Neovim < 0.10 (no `vim.snippet`); no error is raised.

@@ -1,0 +1,27 @@
+file: src/steno.ts
+purpose: Parses, renders, and manipulates individual steno sub-strokes (no `/`). Provides count-bank encoding for merging numeric counts into stroke segments as bit-weighted key sets.
+invariants:
+  - parseStroke rejects strokes with two hyphens or keys in the wrong bank.
+  - renderStroke always emits keys in canonical order; hyphen appears only when right-bank keys are present with no middle keys.
+  - countBank assigns weight 2^i to the i-th key in the spec string (LSB-first).
+external_deps:
+functions:
+  - name: parseStroke
+    signature: export function parseStroke(s: string): StrokeKeys
+    purpose: Splits a sub-stroke string into num/left/mid/right key sets, validating bank membership.
+  - name: renderStroke
+    signature: export function renderStroke(k: StrokeKeys): string
+    purpose: Serializes StrokeKeys back to a canonical sub-stroke string.
+  - name: countBank
+    signature: export function countBank(spec: string): CountBank
+    purpose: Builds a CountBank from a key-spec string, assigning bit weights LSB-first.
+  - name: mergeStrokes
+    signature: export function mergeStrokes(a: string, b: string): string
+    purpose: Unions two sub-strokes into one, throwing on any shared key.
+  - name: addKey
+    signature: export function addKey(segment: string, key: string): string
+    purpose: Adds a single vowel or right-bank key to a sub-stroke segment.
+  - name: applyCount
+    signature: export function applyCount(segment: string, spec: string, count: number): string
+    purpose: Merges the keys encoding `count` via the given spec's bit-weights into a sub-stroke segment.
+    notes: Throws if count is outside 0..bank.max or if any count key is already present.

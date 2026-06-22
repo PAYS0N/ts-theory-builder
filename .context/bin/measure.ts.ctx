@@ -1,0 +1,12 @@
+file: bin/measure.ts
+purpose: CLI script that prints a size matrix comparing plain vs. smart dictionary output across generic-arg pool sizes and full-param vs. no-param function shapes.
+invariants:
+  - Runs directly via `node --experimental-strip-types`; not imported by other modules.
+external_deps:
+functions:
+  - name: noParams
+    signature: function noParams(es: Entry[]): Entry[]
+    purpose: Replaces matched entries' templates with no-parameter variants from NOPARAM, clearing their count field.
+  - name: measure
+    signature: function measure(label: string, es: Entry[], pool: string[] | undefined): void
+    purpose: Expands entries with the given pool, builds both dict types, and logs stroke count, per-dict MB, combined MB, and any collision warnings.

@@ -1,0 +1,22 @@
+file: src/render.ts
+purpose: Converts expanded TypedEntry templates into Plover dictionary entries ({key, value}) for two editor profiles: plain (dumb editor, types all closers) and smart (VS Code-style, drops auto-supplied closers and simulates editor buffer state).
+invariants:
+  - Non-terminal entries are byte-identical between plain and smart profiles.
+  - movement() only moves the cursor up/left; throws RenderError if target is below or right of resting position.
+  - Literal-source entries in smart profile fall back to renderPlain verbatim.
+external_deps:
+  - ./parse.ts: Chunk type for template nodes
+  - ./expand.ts: TypedEntry type (expanded, typed template entries)
+functions:
+  - name: renderPlain
+    signature: export function renderPlain(entry: TypedEntry): { key: string; value: string }
+    purpose: Renders one entry for a plain editor; cursor walks back from document end to %0 via movement().
+  - name: buildPlainDict
+    signature: export function buildPlainDict(entries: TypedEntry[]): BuildResult
+    purpose: Renders all entries with renderPlain into a Plover dictionary, collecting value collisions.
+  - name: renderSmart
+    signature: export function renderSmart(entry: TypedEntry): { key: string; value: string }
+    purpose: Renders one entry for a smart editor, omitting auto-supplied closers and computing movement against the simulated editor buffer.
+  - name: buildSmartDict
+    signature: export function buildSmartDict(entries: TypedEntry[]): BuildResult
+    purpose: Renders all entries with renderSmart into a Plover dictionary, collecting value collisions.

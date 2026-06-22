@@ -164,10 +164,13 @@ pre-method
 .every((%0) => {\nreturn %1})
 ````
 ````STKWR*PLT/SORT
-.sort((%0, %1) => %2)
+.sort()
 ````
-````STKWR*PLT/SORTD
-.sort((%0, %1) => {\nreturn %2})
+````STKWR*PLT/SO*RT
+.sort((a, b) => %0)
+````
+````STKWR*PLT/SO*RTD
+.sort((a, b) => {\nreturn 0})
 ````
 ````STKWR*PLT/TPHRAT
 .flatMap((%0) => %1)
@@ -192,11 +195,11 @@ finally {%b%0}
 ````
 # index: bare STKWR-BGS -> [0]; the AOE vowel bank encodes 0-7 -> [n]. Nothing maps to [].
 ````STKWR-BGS
-[%d]
+[%d]%0
 ````
 @count AOE
 ````STKWR*BGS
-.at()
+.at(%0)
 ````
 # switch: case count via the AOE vowel bank (A=1,O=2,E=4); the %[%] block repeats d times. U reserved for the line-expansion flag.
 ````STKWR-FP
@@ -406,6 +409,7 @@ const %0 = %1
 ````STKWR-RBGT
 pre-struct
 ````
+@literal
 ````STKWR-RBGT/HR
 class ListNode<T> {
 	value: T;
@@ -449,6 +453,7 @@ class LinkedList<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/TKHR
 class DListNode<T> {
 	value: T;
@@ -490,6 +495,7 @@ class DoublyLinkedList<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/S
 class Stack<T> {
 	private items: T[] = [];
@@ -515,6 +521,7 @@ class Stack<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/KW
 class Queue<T> {
 	private items = new Map<number, T>();
@@ -541,6 +548,7 @@ class Queue<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/TKW
 class Deque<T> {
 	private items = new Map<number, T>();
@@ -582,6 +590,7 @@ class Deque<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/H
 class MinHeap<T> {
 	private heap: T[] = [];
@@ -636,6 +645,7 @@ class MinHeap<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/KPH
 class MaxHeap<T> {
 	private heap: T[] = [];
@@ -690,6 +700,7 @@ class MaxHeap<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/TPW
 class TreeNode<T> {
 	value: T;
@@ -736,6 +747,7 @@ class BinaryTree<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/STPW
 class BSTNode<T> {
 	value: T;
@@ -776,6 +788,7 @@ class BST<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/TKPWR
 class Graph<T> {
 	private adj = new Map<T, T[]>();
@@ -814,6 +827,7 @@ class Graph<T> {
 	}
 }
 ````
+@literal
 ````STKWR-RBGT/TR
 class TrieNode {
 	children: Map<string, TrieNode> = new Map();
@@ -852,6 +866,7 @@ class Trie {
 	}
 }
 ````
+@literal
 
 // =====================================================================
 // SMALL SKELETONS (value is mainly the landing)

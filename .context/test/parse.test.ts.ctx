@@ -1,0 +1,7 @@
+file: test/parse.test.ts
+purpose: Vitest test suite for `parseTemplate` and `parseSource` from `src/parse.ts`. Covers chunk output for all template operators, error paths, directive parsing, and validates the real `dict.steno` corpus.
+invariants:
+  - `dict.steno` must parse without errors and contain no duplicate `strokeRaw` values.
+external_deps:
+  - vitest: test runner and assertion library
+functions:

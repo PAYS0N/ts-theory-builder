@@ -1,0 +1,7 @@
+file: snippets.txt
+purpose: Steno chord-to-code-snippet mapping table for TypeScript. Each entry binds a steno stroke (or multi-stroke sequence) to a template string or full class body emitted by a steno-aware editor plugin.
+invariants:
+  - Multi-stroke entries use `/` to separate strokes; the second stroke selects a variant within the root family.
+  - `%0`, `%1`, … are ordered cursor placeholders; `%t` is a type placeholder; `%b` is a block/indent placeholder; `%[%d, %]` repeats a pattern d times.
+external_deps:
+functions:

@@ -1,0 +1,11 @@
+file: bin/build.ts
+purpose: CLI entry point that reads `dict.steno`, runs the parse/expand/render pipeline, and writes `out/plain.json` and `out/smart.json` Plover dictionaries.
+invariants:
+  - Exits with code 1 and prints all colliding strokes if either build result contains collisions.
+  - Output JSON has one stroke per line for readable diffs.
+external_deps:
+functions:
+  - name: emit
+    signature: function emit(name: string, { dict, collisions }: BuildResult): number
+    purpose: Serializes a BuildResult to `out/<name>.json`, logs stroke count and file size, and returns byte length.
+    notes: Calls process.exit(1) on any collisions before writing.

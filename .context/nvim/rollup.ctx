@@ -1,0 +1,7 @@
+directory: nvim
+summary: Neovim plugin subtree that converts Plover-emitted keyset tokens into LSP snippets via `vim.snippet`. The Lua plugin is the sole runtime artifact; the README documents the build pipeline, installation steps, and known chaining limitations.
+children:
+  - README.md: User-facing documentation for installation, build pipeline, and known limitations.
+  - lua/: Runtime plugin exposing `require("steno-ts").setup(opts)` as the sole public entry point.
+key_invariants:
+  - The only supported integration surface is `require("steno-ts").setup(opts)`; no other symbols are exported.

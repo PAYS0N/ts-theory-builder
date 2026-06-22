@@ -1,0 +1,12 @@
+directory: src
+summary: Implements the full steno dictionary compilation pipeline: raw `.steno` source text enters through `parse.ts`, expands through `expand.ts`, and exits as Plover dictionary entries via `render.ts` (plain and smart editor profiles) or LSP snippet artifacts via `snippet.ts`. Stroke-level bit manipulation and count-bank encoding are isolated in `steno.ts`, which the expansion pass depends on but rendering passes do not.
+children:
+  - steno.ts: Stroke arithmetic substrate — parse/render/merge sub-strokes and encode numeric counts as key-bit sets.
+  - parse.ts: Source-to-AST front end; produces `Entry[]` consumed by expand.ts.
+  - expand.ts: Count and type expansion passes; bridges parsed AST to the `TypedEntry[]` consumed by both renderers.
+  - render.ts: Plover dictionary emitter for plain and smart editor profiles.
+  - snippet.ts: LSP snippet emitter; produces stroke→sentinel dictionary and keyId→body table.
+key_invariants:
+  - Data flows strictly in one direction: steno.ts ← parse.ts ← expand.ts ← {render.ts, snippet.ts}; no back-edges.
+  - All error types are thrown (never swallowed); callers receive typed errors or complete results, never partial/silent output.
+  - `TypedEntry[]` is the sole interface between the expansion layer and both output layers.

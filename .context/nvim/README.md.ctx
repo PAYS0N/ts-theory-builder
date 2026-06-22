@@ -1,0 +1,5 @@
+file: nvim/README.md
+purpose: Documents the Neovim plugin that converts Plover-emitted keyset tokens into LSP snippets via vim.snippet, explains the build pipeline, installation, and known chaining limitations.
+invariants:
+external_deps:
+functions:

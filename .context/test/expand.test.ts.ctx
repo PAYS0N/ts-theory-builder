@@ -1,0 +1,14 @@
+file: test/expand.test.ts
+purpose: Integration and unit tests for `expandCounts` and `expandAll` from `src/expand.ts`, covering count fan-out, stroke merging, landing computation, error cases, and full `dict.steno` round-trip.
+invariants:
+  - All tests operate on parsed entries produced by `parseSource`; raw strings are never passed directly to expand functions.
+external_deps:
+  - vitest: test runner and assertion library
+  - node:fs/node:url: loads `dict.steno` from disk for end-to-end tests
+functions:
+  - name: show
+    signature: function show(chunks: Chunk[]): string
+    purpose: Renders a resolved chunk array to a compact string for assertion comparisons; unresolved chunk kinds appear as `<UNRESOLVED:k>`.
+  - name: one
+    signature: function one(src: string): ReturnType<typeof parseSource>[number]
+    purpose: Parses a single-entry source string and asserts exactly one entry was produced, returning it.

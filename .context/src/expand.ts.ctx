@@ -1,0 +1,32 @@
+file: src/expand.ts
+purpose: Implements Pass A (count expansion) and Pass B (type-slot filling) over parsed dictionary entries, producing fully-expanded `TypedEntry` records ready for later rendering passes.
+invariants:
+  - An entry with `@count` but no count operator, or vice versa, throws `ExpandError`.
+  - Iteration index inside a repeat is 0-based (`ITERATION_BASE = 0`).
+  - A computed landing that resolves to a negative number throws `ExpandError`.
+  - `@type` entries are consumed by `buildTypeSet`/`expandDict` and never emitted as output entries.
+external_deps:
+  - ./steno.ts: `addKey`, `applyCount`, `countBank`, `mergeStrokes` for stroke manipulation and count-bank arithmetic.
+  - ./parse.ts: `Chunk` and `Entry` types consumed throughout.
+functions:
+  - name: expandCounts
+    signature: export function expandCounts(entry: Entry): ExpandedEntry[]
+    purpose: Fans one entry out to one `ExpandedEntry` per count value (0..bank.max), resolving `%d`, repeats, and computed landings; passes through non-count entries unchanged.
+  - name: expandAll
+    signature: export function expandAll(entries: Entry[]): ExpandedEntry[]
+    purpose: Applies `expandCounts` to every entry in a parsed dictionary.
+  - name: expandTypesOne
+    signature: export function expandTypesOne(entry: ExpandedEntry, opts: TypeOptions): TypedEntry[]
+    purpose: Builds the full type-append chain for one count-expanded entry, handling zero, one, or multiple `%t` slots and the fuse mode.
+  - name: expandTypes
+    signature: export function expandTypes(entries: ExpandedEntry[], opts: TypeOptions): TypedEntry[]
+    purpose: Applies `expandTypesOne` to every count-expanded entry.
+  - name: buildTypeSet
+    signature: export function buildTypeSet(entries: Entry[]): { types: TypeDef[]; arity0: TypeDef[] }
+    purpose: Collects `@type` entries into the full type set and the arity-0 generic-arg pool, marking free-type entries.
+  - name: expandLineFlag
+    signature: export function expandLineFlag(entries: TypedEntry[]): TypedEntry[]
+    purpose: For each terminal entry containing a `%b` (and not forced multiline), emits an additional U-keyed one-liner variant alongside the default multi-line entry.
+  - name: expandDict
+    signature: export function expandDict(entries: Entry[], genericArgStrokes?: string[]): TypedEntry[]
+    purpose: Runs the full Pass A + Pass B + line-flag pipeline over a parsed dictionary, optionally restricting the generic-arg pool to a specified stroke list.

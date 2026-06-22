@@ -1,0 +1,11 @@
+file: context.md
+purpose: Design handoff document for a Plover steno theory targeting JS/TS. Captures locked architecture decisions, open questions, and the agreed next deliverables so a continuation model can pick up the design conversation without re-litigating settled points.
+invariants:
+  - No JSON dictionary and no parser exist yet; this is pure design phase.
+  - All cursor movement must occur only in the final chord of a translation — never mid-sequence.
+  - Movement anchoring must be indent-width-independent (End+Left-relative, not Up+Right-counted).
+  - Build profiles (not per-stroke flags) encode editor variation for A/E behaviors; O (one-liner) may remain per-stroke except switch/case which is always multi-line.
+  - LSB-toward-middle bit-significance convention is fixed and uniform across all count-encoding key banks.
+  - Modules and async/Promise constructs are explicitly deferred — top of the revisit list.
+external_deps:
+functions:
