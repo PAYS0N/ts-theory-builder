@@ -326,12 +326,12 @@ Set<%t>
 @type
 @arity 1
 # Array as a generic (Array<T>), not a '*' suffix — the suffix would double the dict.
-````KWR
+````R
 Array<%t>
 ````
 @type
 @arity 1
-````R
+````WR
 Error
 ````
 @type
@@ -373,12 +373,15 @@ this.
 ````STKWR-PBGS/-RBGT
 constructor(%0) {%b%1}
 ````
+@fuse
 ````STKWR-PBGS/-GT
 get %0(): %t {%b%1}
 ````
+@fuse
 ````STKWR-PBGS/-FT
 set %0(%1) {%b%2}
 ````
+@fuse
 
 // =====================================================================
 // DECLARATIONS (no-type variants) + DESTRUCTURING (§4f, §4g)

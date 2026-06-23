@@ -128,7 +128,15 @@ function escapeText(s: string): string {
       const len = j - i;
       const before = i > 0 ? s[i - 1] : undefined;
       const after = j < s.length ? s[j] : undefined;
-      const safe = len === 1 && before !== undefined && before !== "\n" && after !== "\n";
+      // A lone internal space is safe only with a real (non-newline) char on BOTH
+      // sides. Touching the start/end of the text or a newline is a boundary
+      // Plover eats — e.g. a trailing space exposed when smart drops a closer.
+      const safe =
+        len === 1 &&
+        before !== undefined &&
+        before !== "\n" &&
+        after !== undefined &&
+        after !== "\n";
       out += safe ? " " : "{^ ^}".repeat(len);
       i = j;
       continue;
