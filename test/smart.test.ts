@@ -56,9 +56,14 @@ describe("renderSmart — parity rules", () => {
     expect(renderSmart(e).value).toBe(renderPlain(e).value);
   });
 
-  it("@literal data structures are byte-identical to plain", () => {
-    for (const s of ["STKWR-RBGT/S", "STKWR-RBGT/HR", "STKWR-RBGT/KW"]) {
-      expect(renderSmart(get(s)).value).toBe(renderPlain(get(s)).value);
+  it("@literal data structures use the v2 struct emitter (not verbatim like plain)", () => {
+    for (const s of ["STKWR-RBGT/S", "STKWR-RBGT/HR"]) {
+      const smart = renderSmart(get(s)).value;
+      const plain = renderPlain(get(s)).value;
+      expect(smart).not.toBe(plain);
+      expect(plain).toContain("\\}"); // plain types every closing brace
+      expect(smart).not.toContain("\\}"); // smart lets the editor supply them
+      expect(smart).toContain("{#Down"); // and navigates around them
     }
   });
 

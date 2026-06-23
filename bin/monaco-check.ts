@@ -22,6 +22,8 @@ import {
   SMART_INDENT,
   interpret,
 } from "../src/editor.ts";
+import { parseSource } from "../src/parse.ts";
+import { emitStruct } from "../src/struct.ts";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const monacoMin = join(root, "node_modules", "monaco-editor", "min");
@@ -109,11 +111,15 @@ async function configure(page: Page, b: Behaviors): Promise<void> {
   await page.waitForTimeout(40); // let the freshly-created editor lay out & focus
 }
 
+/** Javelin emits keystrokes with a ~5ms inter-key delay; replay at that cadence
+ * so the harness faithfully reflects whether the editor keeps up in practice. */
+const JAVELIN_DELAY = 5;
+
 async function replay(page: Page, events: Event[]): Promise<void> {
   for (const ev of events) {
     if (ev.k === "mark") continue;
-    if (ev.k === "text") await page.keyboard.type(ev.s);
-    else for (let i = 0; i < ev.n; i++) await page.keyboard.press(KEY[ev.key]!);
+    if (ev.k === "text") await page.keyboard.type(ev.s, { delay: JAVELIN_DELAY });
+    else for (let i = 0; i < ev.n; i++) await page.keyboard.press(KEY[ev.key]!, { delay: JAVELIN_DELAY });
   }
 }
 
@@ -180,6 +186,13 @@ const CASES: Case[] = [
   },
   { label: "plain types literally", b: PLAIN, events: [text("a(b){"), k("Enter"), text("c")] },
 ];
+
+// Real data structures: emitStruct keystrokes -> Monaco, vs the interpreter.
+const dictSrc = readFileSync(join(root, "dict.steno"), "utf8");
+for (const stroke of ["STKWR-RBGT/S", "STKWR-RBGT/HR", "STKWR-RBGT/TKHR"]) {
+  const entry = parseSource(dictSrc).find((e) => e.strokeRaw === stroke);
+  if (entry) CASES.push({ label: `struct ${stroke}`, b: SMART_INDENT, events: emitStruct(entry.template) });
+}
 
 async function main(): Promise<void> {
   const probe = process.argv.includes("--probe");

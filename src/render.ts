@@ -23,6 +23,7 @@ import {
   movementEvents,
   serialize,
 } from "./editor.ts";
+import { emitStruct } from "./struct.ts";
 
 const BRACKETS = new Set(["(", ")", "[", "]", "<", ">", "{", "}"]);
 const AUTO_CLOSE = new Set([")", "]", "}"]);
@@ -150,9 +151,12 @@ export function renderPlain(entry: TypedEntry): { key: string; value: string } {
 
 /** Render one expanded+typed entry to a Plover { key, value } (smart profile). */
 export function renderSmart(entry: TypedEntry): { key: string; value: string } {
-  // @literal blocks (whole-code dumps) are emitted verbatim: a smart editor
-  // mangles them regardless, so dropping closers would only lose a brace.
-  if (entry.source.literal) return renderPlain(entry);
+  // @literal blocks drive the editor structurally (emitStruct): type only the
+  // opening lines and navigate around the auto-supplied braces, so auto-indent
+  // and bracket-closing cooperate instead of doubling. Validated vs Monaco.
+  if (entry.source.literal) {
+    return { key: entry.stroke, value: "{^}" + serialize(emitStruct(entry.template)) + "{^}" };
+  }
   if (!entry.terminal) return { key: entry.stroke, value: renderNonTerminal(entry.template) };
   return renderWith(entry, SMART);
 }
