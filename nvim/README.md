@@ -9,11 +9,11 @@ need.
 ## How it fits together
 
 ```
-chord ─► Plover (out/plover-keys.json)  stroke ─► «keyset token»
+chord ─► Plover (out/plover-keys.json)  stroke ─► @@keyset token@@
         types the token into the editor
                          │
                          ▼
-      steno-ts plugin (out/snippets.json)  «token» ─► LSP snippet body
+      steno-ts plugin (out/snippets.json)  @@token@@ ─► LSP snippet body
         detects the token, deletes it, vim.snippet.expand(body)
 ```
 
@@ -24,7 +24,7 @@ npm run build:nvim   # writes out/plover-keys.json and out/snippets.json
 ```
 
 - Load **`out/plover-keys.json`** as a Plover dictionary (it maps every stroke to
-  a `«…»` token).
+  a `@@…@@` token).
 - Point the plugin at **`out/snippets.json`** (token → snippet body).
 
 ## Install & configure
@@ -44,7 +44,7 @@ Requires Neovim **0.10+** (built-in `vim.snippet`). With lazy.nvim:
 ```
 
 The plugin attaches a `TextChangedI` autocmd to matching buffers; when a complete
-`«token»` appears at the cursor it deletes it and expands the snippet.
+`@@token@@` appears at the cursor it deletes it and expands the snippet.
 
 ## Status & the chaining caveat
 

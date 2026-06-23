@@ -122,9 +122,11 @@ export interface SnippetBuild {
 }
 
 /** Sentinel pair wrapping the keyset token Plover types (so the plugin can find
- * it without colliding with ordinary text). Keep in sync with the nvim plugin. */
-export const SENTINEL_OPEN = "«"; // «
-export const SENTINEL_CLOSE = "»"; // »
+ * it without colliding with ordinary text). ASCII so Javelin can emit it, and
+ * not an auto-pairing char so the smart editor won't mangle the token. Keep in
+ * sync with the nvim plugin. */
+export const SENTINEL_OPEN = "@@";
+export const SENTINEL_CLOSE = "@@";
 
 /** Build both artifacts from the typed entries. */
 export function buildSnippets(entries: TypedEntry[]): SnippetBuild {

@@ -10,8 +10,10 @@
 
 local M = {}
 
-local OPEN = "«"
-local CLOSE = "»"
+-- Must match SENTINEL_OPEN/CLOSE in src/snippet.ts. ASCII (Javelin-emittable),
+-- non-auto-pairing, and never valid TS so it can't appear in real code.
+local OPEN = "@@"
+local CLOSE = "@@"
 
 local config = {
   -- Path to the generated snippets.json (keyId -> LSP body).
@@ -40,7 +42,7 @@ local function load_snippets(path)
   return true
 end
 
--- Return the keyId of a complete «…» token ending exactly at the cursor, plus
+-- Return the keyId of a complete @@…@@ token ending exactly at the cursor, plus
 -- the 0-indexed byte column where the token starts; or nil.
 local function token_before_cursor()
   local line = vim.api.nvim_get_current_line()
@@ -49,10 +51,12 @@ local function token_before_cursor()
   if prefix:sub(-#CLOSE) ~= CLOSE then
     return nil
   end
-  -- Find the last opening sentinel (plain, not pattern — sentinels are UTF-8).
+  -- Strip the trailing close first, so when OPEN == CLOSE the search below
+  -- can't match the closing fence as if it were the opening one.
+  local body = prefix:sub(1, #prefix - #CLOSE)
   local start, init = nil, 1
   while true do
-    local i = prefix:find(OPEN, init, true)
+    local i = body:find(OPEN, init, true)
     if not i then
       break
     end
@@ -62,7 +66,7 @@ local function token_before_cursor()
   if not start then
     return nil
   end
-  local key = prefix:sub(start + #OPEN, #prefix - #CLOSE)
+  local key = body:sub(start + #OPEN)
   return key, start - 1 -- start_col is 0-indexed
 end
 

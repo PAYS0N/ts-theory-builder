@@ -7,12 +7,15 @@
   "scripts": {
     "build": "node --experimental-strip-types bin/build.ts",
     "build:nvim": "node --experimental-strip-types bin/build-nvim.ts",
+    "check:monaco": "node --experimental-strip-types bin/monaco-check.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
+    "monaco-editor": "^0.55.1",
+    "playwright": "^1.61.0",
     "typescript": "^5.5.4",
     "vitest": "^2.1.8"
   }
